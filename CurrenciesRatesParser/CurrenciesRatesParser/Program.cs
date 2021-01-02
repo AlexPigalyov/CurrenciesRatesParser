@@ -10,6 +10,7 @@ namespace CurrenciesRatesParser
     {
         static void Main(string[] args)
         {
+
         }
     }
 }
