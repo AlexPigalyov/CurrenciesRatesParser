@@ -27,6 +27,7 @@ namespace CurrenciesRatesParser.Model
             Dictionary<string, double> currencies = new Dictionary<string, double>();
             using (WebClient client = new WebClient())
             {
+                client.Encoding = Encoding.UTF8;
                 var htmlCode = await client.DownloadStringTaskAsync("https://www.moex.com/ru/derivatives/commodity/gold/");
                 var matches = Regex.Matches(htmlCode, "(?<=>)([1-9]+.[\\d,]+)+|([\\d,])(?=<)");
                 int index = 0;
