@@ -22,6 +22,8 @@ namespace CurrenciesRatesParser.Model
                     ctx.Rates.Add(rates);
                     ctx.SaveChanges();
                 }
+
+                Console.WriteLine("Rates saved. Time: {0}", DateTime.Now.ToString("HH:mm:ss"));
             }
             catch (Exception ex)
             {
