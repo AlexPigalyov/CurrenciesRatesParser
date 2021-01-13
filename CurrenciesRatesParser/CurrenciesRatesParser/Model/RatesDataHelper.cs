@@ -15,10 +15,17 @@ namespace CurrenciesRatesParser.Model
     {
         public static void AddRates(Rates rates)
         {
-            using(var ctx = new RentooloEntities())
+            try
             {
-                ctx.Rates.Add(rates);
-                ctx.SaveChanges();
+                using (var ctx = new RentooloEntities())
+                {
+                    ctx.Rates.Add(rates);
+                    ctx.SaveChanges();
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Exception information: {0}", ex.Message);
             }
         }
 
