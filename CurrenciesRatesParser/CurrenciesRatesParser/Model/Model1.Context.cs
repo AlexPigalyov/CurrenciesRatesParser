@@ -13,10 +13,10 @@ namespace CurrenciesRatesParser.Model
     using System.Data.Entity;
     using System.Data.Entity.Infrastructure;
     
-    public partial class RentooloEntities : DbContext
+    public partial class Entities : DbContext
     {
-        public RentooloEntities()
-            : base("name=RentooloEntities")
+        public Entities()
+            : base("name=Entities")
         {
         }
     
