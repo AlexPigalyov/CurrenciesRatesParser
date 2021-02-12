@@ -1,11 +1,6 @@
 ﻿using Quartz;
 using Quartz.Impl;
-
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CurrenciesRatesParser
 {
@@ -13,7 +8,8 @@ namespace CurrenciesRatesParser
     {
         static void Main(string[] args)
         {
-            
+            Console.WriteLine("Srvice start. Time: {0}", DateTime.Now.ToString("HH:mm:ss"));
+
             ISchedulerFactory schedFact = new StdSchedulerFactory();
 
             IScheduler sched = schedFact.GetScheduler().Result;
