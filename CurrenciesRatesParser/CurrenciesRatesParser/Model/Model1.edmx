@@ -4,7 +4,28 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-      <Schema Namespace="Хранилище RentooloModel" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+      <Schema Namespace="Model.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="DpdCities">
+          <Key>
+            <PropertyRef Name="cityId" />
+          </Key>
+          <Property Name="cityId" Type="bigint" Nullable="false" />
+          <Property Name="cityIdSpecified" Type="bit" Nullable="false" />
+          <Property Name="countryCode" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="countryName" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="regionCode" Type="int" Nullable="false" />
+          <Property Name="regionCodeSpecified" Type="bit" Nullable="false" />
+          <Property Name="regionName" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="cityCode" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="cityName" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="abbreviation" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="indexMin" Type="nvarchar" MaxLength="50" />
+          <Property Name="indexMax" Type="nvarchar" MaxLength="50" />
+          <Property Name="Population" Type="bigint" />
+          <Property Name="Settled" Type="nchar" MaxLength="20" />
+          <Property Name="lat" Type="float" />
+          <Property Name="lng" Type="float" />
+        </EntityType>
         <EntityType Name="Rates">
           <Key>
             <PropertyRef Name="Id" />
@@ -13,14 +34,39 @@
           <Property Name="Date" Type="datetime" Nullable="false" />
           <Property Name="Value" Type="nvarchar(max)" Nullable="false" />
         </EntityType>
-        <EntityContainer Name="Хранилище RentooloModelContainer">
+        <Function Name="spDPDCitiesTop10" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="text" Type="nvarchar" Mode="In" />
+        </Function>
+        <EntityContainer Name="ModelStoreContainer">
+          <EntitySet Name="DpdCities" EntityType="Self.DpdCities" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Rates" EntityType="Self.Rates" Schema="dbo" store:Type="Tables" />
         </EntityContainer>
       </Schema>
     </edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
-      <Schema Namespace="RentooloModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+      <Schema Namespace="Model" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="DpdCities">
+          <Key>
+            <PropertyRef Name="cityId" />
+          </Key>
+          <Property Name="cityId" Type="Int64" Nullable="false" />
+          <Property Name="cityIdSpecified" Type="Boolean" Nullable="false" />
+          <Property Name="countryCode" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="countryName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="regionCode" Type="Int32" Nullable="false" />
+          <Property Name="regionCodeSpecified" Type="Boolean" Nullable="false" />
+          <Property Name="regionName" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="cityCode" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="cityName" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="abbreviation" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="indexMin" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="indexMax" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Population" Type="Int64" />
+          <Property Name="Settled" Type="String" MaxLength="20" FixedLength="true" Unicode="true" />
+          <Property Name="lat" Type="Double" />
+          <Property Name="lng" Type="Double" />
+        </EntityType>
         <EntityType Name="Rates">
           <Key>
             <PropertyRef Name="Id" />
@@ -29,17 +75,61 @@
           <Property Name="Date" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="Value" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
         </EntityType>
-        <EntityContainer Name="RentooloEntities" annotation:LazyLoadingEnabled="true">
+        <EntityContainer Name="Entities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="DpdCities" EntityType="Self.DpdCities" />
           <EntitySet Name="Rates" EntityType="Self.Rates" />
+          <FunctionImport Name="spDPDCitiesTop10" ReturnType="Collection(Model.spDPDCitiesTop10_Result)">
+            <Parameter Name="text" Mode="In" Type="String" />
+          </FunctionImport>
         </EntityContainer>
+        <ComplexType Name="spDPDCitiesTop10_Result">
+          <Property Type="Int64" Name="cityId" Nullable="false" />
+          <Property Type="Boolean" Name="cityIdSpecified" Nullable="false" />
+          <Property Type="String" Name="countryCode" Nullable="false" MaxLength="50" />
+          <Property Type="String" Name="countryName" Nullable="false" MaxLength="50" />
+          <Property Type="Int32" Name="regionCode" Nullable="false" />
+          <Property Type="Boolean" Name="regionCodeSpecified" Nullable="false" />
+          <Property Type="String" Name="regionName" Nullable="false" MaxLength="100" />
+          <Property Type="String" Name="cityCode" Nullable="false" MaxLength="50" />
+          <Property Type="String" Name="cityName" Nullable="false" MaxLength="100" />
+          <Property Type="String" Name="abbreviation" Nullable="false" MaxLength="50" />
+          <Property Type="String" Name="indexMin" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="indexMax" Nullable="true" MaxLength="50" />
+          <Property Type="Int64" Name="Population" Nullable="true" />
+          <Property Type="String" Name="Settled" Nullable="true" MaxLength="20" />
+          <Property Type="Double" Name="lat" Nullable="true" />
+          <Property Type="Double" Name="lng" Nullable="true" />
+        </ComplexType>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
     <edmx:Mappings>
       <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
-        <EntityContainerMapping StorageEntityContainer="Хранилище RentooloModelContainer" CdmEntityContainer="RentooloEntities">
+        <EntityContainerMapping StorageEntityContainer="ModelStoreContainer" CdmEntityContainer="Entities">
+          <EntitySetMapping Name="DpdCities">
+            <EntityTypeMapping TypeName="Model.DpdCities">
+              <MappingFragment StoreEntitySet="DpdCities">
+                <ScalarProperty Name="cityId" ColumnName="cityId" />
+                <ScalarProperty Name="cityIdSpecified" ColumnName="cityIdSpecified" />
+                <ScalarProperty Name="countryCode" ColumnName="countryCode" />
+                <ScalarProperty Name="countryName" ColumnName="countryName" />
+                <ScalarProperty Name="regionCode" ColumnName="regionCode" />
+                <ScalarProperty Name="regionCodeSpecified" ColumnName="regionCodeSpecified" />
+                <ScalarProperty Name="regionName" ColumnName="regionName" />
+                <ScalarProperty Name="cityCode" ColumnName="cityCode" />
+                <ScalarProperty Name="cityName" ColumnName="cityName" />
+                <ScalarProperty Name="abbreviation" ColumnName="abbreviation" />
+                <ScalarProperty Name="indexMin" ColumnName="indexMin" />
+                <ScalarProperty Name="indexMax" ColumnName="indexMax" />
+                <ScalarProperty Name="Population" ColumnName="Population" />
+                <ScalarProperty Name="Settled" ColumnName="Settled" />
+                <ScalarProperty Name="lat" ColumnName="lat" />
+                <ScalarProperty Name="lng" ColumnName="lng" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
           <EntitySetMapping Name="Rates">
-            <EntityTypeMapping TypeName="RentooloModel.Rates">
+            <EntityTypeMapping TypeName="Model.Rates">
               <MappingFragment StoreEntitySet="Rates">
                 <ScalarProperty Name="Id" ColumnName="Id" />
                 <ScalarProperty Name="Date" ColumnName="Date" />
@@ -47,6 +137,28 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="spDPDCitiesTop10" FunctionName="Model.Store.spDPDCitiesTop10">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="Model.spDPDCitiesTop10_Result">
+                <ScalarProperty Name="cityId" ColumnName="cityId" />
+                <ScalarProperty Name="cityIdSpecified" ColumnName="cityIdSpecified" />
+                <ScalarProperty Name="countryCode" ColumnName="countryCode" />
+                <ScalarProperty Name="countryName" ColumnName="countryName" />
+                <ScalarProperty Name="regionCode" ColumnName="regionCode" />
+                <ScalarProperty Name="regionCodeSpecified" ColumnName="regionCodeSpecified" />
+                <ScalarProperty Name="regionName" ColumnName="regionName" />
+                <ScalarProperty Name="cityCode" ColumnName="cityCode" />
+                <ScalarProperty Name="cityName" ColumnName="cityName" />
+                <ScalarProperty Name="abbreviation" ColumnName="abbreviation" />
+                <ScalarProperty Name="indexMin" ColumnName="indexMin" />
+                <ScalarProperty Name="indexMax" ColumnName="indexMax" />
+                <ScalarProperty Name="Population" ColumnName="Population" />
+                <ScalarProperty Name="Settled" ColumnName="Settled" />
+                <ScalarProperty Name="lat" ColumnName="lat" />
+                <ScalarProperty Name="lng" ColumnName="lng" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>
@@ -64,7 +176,7 @@
         <DesignerProperty Name="EnablePluralization" Value="false" />
         <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
         <DesignerProperty Name="UseLegacyProvider" Value="false" />
-        <DesignerProperty Name="CodeGenerationStrategy" Value="Нет" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
       </DesignerInfoPropertySet>
     </Options>
     <!-- Diagram content (shape and connector positions) -->

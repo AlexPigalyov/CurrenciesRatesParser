@@ -1,9 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
-using System.IO.Compression;
-using System.Linq;
 using System.Net;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -17,7 +13,7 @@ namespace CurrenciesRatesParser.Model
         {
             try
             {
-                using (var ctx = new RentooloEntities())
+                using (var ctx = new Entities())
                 {
                     ctx.Rates.Add(rates);
                     ctx.SaveChanges();
