@@ -13,7 +13,8 @@ namespace CurrenciesRatesParser
     {
         static void Main(string[] args)
         {
-            
+            Console.WriteLine("Application start. Time: {0}", DateTime.Now.ToString("HH:mm:ss"));
+
             ISchedulerFactory schedFact = new StdSchedulerFactory();
 
             IScheduler sched = schedFact.GetScheduler().Result;
