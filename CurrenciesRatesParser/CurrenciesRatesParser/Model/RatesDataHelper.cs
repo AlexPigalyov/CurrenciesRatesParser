@@ -17,7 +17,7 @@ namespace CurrenciesRatesParser.Model
         {
             try
             {
-                using (var ctx = new RentooloEntities())
+                using (var ctx = new Model.Entities())
                 {
                     ctx.Rates.Add(rates);
                     ctx.SaveChanges();
