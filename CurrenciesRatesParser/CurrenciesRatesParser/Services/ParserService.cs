@@ -29,8 +29,7 @@ namespace ratesRatesParser.Services
                         rates.Add(new Rates() 
                         {
                             Acronim = "XAU",
-                            Buy = price,
-                            Sell = price,
+                            Price = price,
                             Date = DateTime.Now,
                             Site = site
                         });
@@ -41,8 +40,7 @@ namespace ratesRatesParser.Services
                         rates.Add(new Rates()
                         {
                             Acronim = "PAL",
-                            Buy = price,
-                            Sell = price,
+                            Price = price,
                             Date = DateTime.Now,
                             Site = site
                         });
@@ -53,8 +51,7 @@ namespace ratesRatesParser.Services
                         rates.Add(new Rates()
                         {
                             Acronim = "PL",
-                            Buy = price,
-                            Sell = price,
+                            Price = price,
                             Date = DateTime.Now,
                             Site = site
                         });
@@ -65,8 +62,7 @@ namespace ratesRatesParser.Services
                         rates.Add(new Rates()
                         {
                             Acronim = "XAG",
-                            Buy = price,
-                            Sell = price,
+                            Price = price,
                             Date = DateTime.Now,
                             Site = site
                         });
@@ -105,8 +101,7 @@ namespace ratesRatesParser.Services
                         rates.Add(new Rates()
                         {
                             Acronim = codeOfRatesMatches[i].Value.Split()[3],
-                            Buy = price,
-                            Sell = price,
+                            Price = price,
                             Date = parsingStartTime ,
                             Site = currentUrl
                         });

@@ -5,7 +5,7 @@
     <!-- SSDL content -->
     <edmx:StorageModels>
       <Schema Namespace="Хранилище Model" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
-        <EntityType Name="Rates">
+        <EntityType Name="CoinsRates">
           <Key>
             <PropertyRef Name="Id" />
           </Key>
@@ -16,7 +16,18 @@
           <Property Name="Buy" Type="float" Nullable="false" />
           <Property Name="Date" Type="datetime" Nullable="false" />
         </EntityType>
+        <EntityType Name="Rates">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Acronim" Type="nvarchar" MaxLength="10" Nullable="false" />
+          <Property Name="Site" Type="nvarchar" MaxLength="150" Nullable="false" />
+          <Property Name="Price" Type="float" Nullable="false" />
+          <Property Name="Date" Type="datetime" Nullable="false" />
+        </EntityType>
         <EntityContainer Name="Хранилище ModelContainer">
+          <EntitySet Name="CoinsRates" EntityType="Self.CoinsRates" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Rates" EntityType="Self.Rates" Schema="dbo" store:Type="Tables" />
         </EntityContainer>
       </Schema>
@@ -24,7 +35,7 @@
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="Model" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
-        <EntityType Name="Rates">
+        <EntityType Name="CoinsRates">
           <Key>
             <PropertyRef Name="Id" />
           </Key>
@@ -35,7 +46,18 @@
           <Property Name="Buy" Type="Double" Nullable="false" />
           <Property Name="Date" Type="DateTime" Nullable="false" Precision="3" />
         </EntityType>
+        <EntityType Name="Rates">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Acronim" Type="String" MaxLength="10" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Site" Type="String" MaxLength="150" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Price" Type="Double" Nullable="false" />
+          <Property Name="Date" Type="DateTime" Nullable="false" Precision="3" />
+        </EntityType>
         <EntityContainer Name="Entities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="CoinsRates" EntityType="Self.CoinsRates" />
           <EntitySet Name="Rates" EntityType="Self.Rates" />
         </EntityContainer>
       </Schema>
@@ -44,14 +66,25 @@
     <edmx:Mappings>
       <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
         <EntityContainerMapping StorageEntityContainer="Хранилище ModelContainer" CdmEntityContainer="Entities">
+          <EntitySetMapping Name="CoinsRates">
+            <EntityTypeMapping TypeName="Model.CoinsRates">
+              <MappingFragment StoreEntitySet="CoinsRates">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Acronim" ColumnName="Acronim" />
+                <ScalarProperty Name="Site" ColumnName="Site" />
+                <ScalarProperty Name="Sell" ColumnName="Sell" />
+                <ScalarProperty Name="Buy" ColumnName="Buy" />
+                <ScalarProperty Name="Date" ColumnName="Date" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
           <EntitySetMapping Name="Rates">
             <EntityTypeMapping TypeName="Model.Rates">
               <MappingFragment StoreEntitySet="Rates">
                 <ScalarProperty Name="Id" ColumnName="Id" />
                 <ScalarProperty Name="Acronim" ColumnName="Acronim" />
                 <ScalarProperty Name="Site" ColumnName="Site" />
-                <ScalarProperty Name="Sell" ColumnName="Sell" />
-                <ScalarProperty Name="Buy" ColumnName="Buy" />
+                <ScalarProperty Name="Price" ColumnName="Price" />
                 <ScalarProperty Name="Date" ColumnName="Date" />
               </MappingFragment>
             </EntityTypeMapping>
