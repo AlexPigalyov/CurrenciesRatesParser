@@ -10,8 +10,11 @@
             <PropertyRef Name="Id" />
           </Key>
           <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Acronim" Type="nvarchar" MaxLength="10" Nullable="false" />
+          <Property Name="Site" Type="nvarchar" MaxLength="150" Nullable="false" />
+          <Property Name="Sell" Type="float" Nullable="false" />
+          <Property Name="Buy" Type="float" Nullable="false" />
           <Property Name="Date" Type="datetime" Nullable="false" />
-          <Property Name="Value" Type="nvarchar(max)" Nullable="false" />
         </EntityType>
         <EntityContainer Name="Хранилище ModelContainer">
           <EntitySet Name="Rates" EntityType="Self.Rates" Schema="dbo" store:Type="Tables" />
@@ -26,8 +29,11 @@
             <PropertyRef Name="Id" />
           </Key>
           <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Acronim" Type="String" MaxLength="10" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Site" Type="String" MaxLength="150" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Sell" Type="Double" Nullable="false" />
+          <Property Name="Buy" Type="Double" Nullable="false" />
           <Property Name="Date" Type="DateTime" Nullable="false" Precision="3" />
-          <Property Name="Value" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
         </EntityType>
         <EntityContainer Name="Entities" annotation:LazyLoadingEnabled="true">
           <EntitySet Name="Rates" EntityType="Self.Rates" />
@@ -42,8 +48,11 @@
             <EntityTypeMapping TypeName="Model.Rates">
               <MappingFragment StoreEntitySet="Rates">
                 <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Acronim" ColumnName="Acronim" />
+                <ScalarProperty Name="Site" ColumnName="Site" />
+                <ScalarProperty Name="Sell" ColumnName="Sell" />
+                <ScalarProperty Name="Buy" ColumnName="Buy" />
                 <ScalarProperty Name="Date" ColumnName="Date" />
-                <ScalarProperty Name="Value" ColumnName="Value" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
