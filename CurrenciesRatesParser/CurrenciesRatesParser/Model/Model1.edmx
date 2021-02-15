@@ -4,7 +4,7 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-      <Schema Namespace="Хранилище Model" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+      <Schema Namespace="Model.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="CoinsRates">
           <Key>
             <PropertyRef Name="Id" />
@@ -15,6 +15,39 @@
           <Property Name="Sell" Type="float" Nullable="false" />
           <Property Name="Buy" Type="float" Nullable="false" />
           <Property Name="Date" Type="datetime" Nullable="false" />
+        </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'web-api.online.dbo.Currencies' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="Currencies">
+          <Key>
+            <PropertyRef Name="Id" />
+            <PropertyRef Name="Name" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Acronim" Type="nvarchar" MaxLength="5" />
+          <Property Name="Country" Type="nvarchar" MaxLength="50" />
+        </EntityType>
+        <EntityType Name="DpdCities">
+          <Key>
+            <PropertyRef Name="cityId" />
+          </Key>
+          <Property Name="cityId" Type="bigint" Nullable="false" />
+          <Property Name="cityIdSpecified" Type="bit" Nullable="false" />
+          <Property Name="countryCode" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="countryName" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="regionCode" Type="int" Nullable="false" />
+          <Property Name="regionCodeSpecified" Type="bit" Nullable="false" />
+          <Property Name="regionName" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="cityCode" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="cityName" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="abbreviation" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="indexMin" Type="nvarchar" MaxLength="50" />
+          <Property Name="indexMax" Type="nvarchar" MaxLength="50" />
+          <Property Name="Population" Type="bigint" />
+          <Property Name="Settled" Type="nchar" MaxLength="20" />
+          <Property Name="lat" Type="float" />
+          <Property Name="lng" Type="float" />
         </EntityType>
         <EntityType Name="Rates">
           <Key>
@@ -27,9 +60,22 @@
           <Property Name="Sell" Type="float" Nullable="false" />
           <Property Name="Date" Type="datetime" Nullable="false" />
         </EntityType>
-        <EntityContainer Name="Хранилище ModelContainer">
+        <Function Name="spGetDPDCitiesTop10" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="text" Type="nvarchar" Mode="In" />
+        </Function>
+        <Function Name="spGetTickerRates" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+        <EntityContainer Name="ModelStoreContainer">
           <EntitySet Name="CoinsRates" EntityType="Self.CoinsRates" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="DpdCities" EntityType="Self.DpdCities" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Rates" EntityType="Self.Rates" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Currencies" EntityType="Self.Currencies" store:Type="Tables" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [Currencies].[Id] AS [Id], 
+    [Currencies].[Name] AS [Name], 
+    [Currencies].[Acronim] AS [Acronim], 
+    [Currencies].[Country] AS [Country]
+    FROM [dbo].[Currencies] AS [Currencies]</DefiningQuery>
+          </EntitySet>
         </EntityContainer>
       </Schema>
     </edmx:StorageModels>
@@ -47,6 +93,27 @@
           <Property Name="Buy" Type="Double" Nullable="false" />
           <Property Name="Date" Type="DateTime" Nullable="false" Precision="3" />
         </EntityType>
+        <EntityType Name="DpdCities">
+          <Key>
+            <PropertyRef Name="cityId" />
+          </Key>
+          <Property Name="cityId" Type="Int64" Nullable="false" />
+          <Property Name="cityIdSpecified" Type="Boolean" Nullable="false" />
+          <Property Name="countryCode" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="countryName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="regionCode" Type="Int32" Nullable="false" />
+          <Property Name="regionCodeSpecified" Type="Boolean" Nullable="false" />
+          <Property Name="regionName" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="cityCode" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="cityName" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="abbreviation" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="indexMin" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="indexMax" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Population" Type="Int64" />
+          <Property Name="Settled" Type="String" MaxLength="20" FixedLength="true" Unicode="true" />
+          <Property Name="lat" Type="Double" />
+          <Property Name="lng" Type="Double" />
+        </EntityType>
         <EntityType Name="Rates">
           <Key>
             <PropertyRef Name="Id" />
@@ -58,16 +125,58 @@
           <Property Name="Sell" Type="Double" Nullable="false" />
           <Property Name="Date" Type="DateTime" Nullable="false" Precision="3" />
         </EntityType>
+        <EntityType Name="Currencies">
+          <Key>
+            <PropertyRef Name="Id" />
+            <PropertyRef Name="Name" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Acronim" Type="String" MaxLength="5" FixedLength="false" Unicode="true" />
+          <Property Name="Country" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+        </EntityType>
         <EntityContainer Name="Entities" annotation:LazyLoadingEnabled="true">
           <EntitySet Name="CoinsRates" EntityType="Self.CoinsRates" />
+          <EntitySet Name="DpdCities" EntityType="Self.DpdCities" />
           <EntitySet Name="Rates" EntityType="Self.Rates" />
+          <EntitySet Name="Currencies" EntityType="Self.Currencies" />
+          <FunctionImport Name="spGetDPDCitiesTop10" ReturnType="Collection(Model.spGetDPDCitiesTop10_Result)">
+            <Parameter Name="text" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="spGetTickerRates" ReturnType="Collection(Model.spGetTickerRates_Result)" />
         </EntityContainer>
+        <ComplexType Name="spGetDPDCitiesTop10_Result">
+          <Property Type="Int64" Name="cityId" Nullable="false" />
+          <Property Type="Boolean" Name="cityIdSpecified" Nullable="false" />
+          <Property Type="String" Name="countryCode" Nullable="false" MaxLength="50" />
+          <Property Type="String" Name="countryName" Nullable="false" MaxLength="50" />
+          <Property Type="Int32" Name="regionCode" Nullable="false" />
+          <Property Type="Boolean" Name="regionCodeSpecified" Nullable="false" />
+          <Property Type="String" Name="regionName" Nullable="false" MaxLength="100" />
+          <Property Type="String" Name="cityCode" Nullable="false" MaxLength="50" />
+          <Property Type="String" Name="cityName" Nullable="false" MaxLength="100" />
+          <Property Type="String" Name="abbreviation" Nullable="false" MaxLength="50" />
+          <Property Type="String" Name="indexMin" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="indexMax" Nullable="true" MaxLength="50" />
+          <Property Type="Int64" Name="Population" Nullable="true" />
+          <Property Type="String" Name="Settled" Nullable="true" MaxLength="20" />
+          <Property Type="Double" Name="lat" Nullable="true" />
+          <Property Type="Double" Name="lng" Nullable="true" />
+        </ComplexType>
+        <ComplexType Name="spGetTickerRates_Result">
+          <Property Type="Int64" Name="Id" Nullable="false" />
+          <Property Type="String" Name="Acronim" Nullable="false" MaxLength="10" />
+          <Property Type="String" Name="Site" Nullable="false" MaxLength="150" />
+          <Property Type="Double" Name="Buy" Nullable="false" />
+          <Property Type="Double" Name="Sell" Nullable="false" />
+          <Property Type="DateTime" Name="Date" Nullable="false" Precision="23" />
+        </ComplexType>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
     <edmx:Mappings>
       <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
-        <EntityContainerMapping StorageEntityContainer="Хранилище ModelContainer" CdmEntityContainer="Entities">
+        <EntityContainerMapping StorageEntityContainer="ModelStoreContainer" CdmEntityContainer="Entities">
           <EntitySetMapping Name="CoinsRates">
             <EntityTypeMapping TypeName="Model.CoinsRates">
               <MappingFragment StoreEntitySet="CoinsRates">
@@ -77,6 +186,28 @@
                 <ScalarProperty Name="Sell" ColumnName="Sell" />
                 <ScalarProperty Name="Buy" ColumnName="Buy" />
                 <ScalarProperty Name="Date" ColumnName="Date" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="DpdCities">
+            <EntityTypeMapping TypeName="Model.DpdCities">
+              <MappingFragment StoreEntitySet="DpdCities">
+                <ScalarProperty Name="cityId" ColumnName="cityId" />
+                <ScalarProperty Name="cityIdSpecified" ColumnName="cityIdSpecified" />
+                <ScalarProperty Name="countryCode" ColumnName="countryCode" />
+                <ScalarProperty Name="countryName" ColumnName="countryName" />
+                <ScalarProperty Name="regionCode" ColumnName="regionCode" />
+                <ScalarProperty Name="regionCodeSpecified" ColumnName="regionCodeSpecified" />
+                <ScalarProperty Name="regionName" ColumnName="regionName" />
+                <ScalarProperty Name="cityCode" ColumnName="cityCode" />
+                <ScalarProperty Name="cityName" ColumnName="cityName" />
+                <ScalarProperty Name="abbreviation" ColumnName="abbreviation" />
+                <ScalarProperty Name="indexMin" ColumnName="indexMin" />
+                <ScalarProperty Name="indexMax" ColumnName="indexMax" />
+                <ScalarProperty Name="Population" ColumnName="Population" />
+                <ScalarProperty Name="Settled" ColumnName="Settled" />
+                <ScalarProperty Name="lat" ColumnName="lat" />
+                <ScalarProperty Name="lng" ColumnName="lng" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -92,6 +223,50 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <EntitySetMapping Name="Currencies">
+            <EntityTypeMapping TypeName="Model.Currencies">
+              <MappingFragment StoreEntitySet="Currencies">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Acronim" ColumnName="Acronim" />
+                <ScalarProperty Name="Country" ColumnName="Country" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="spGetDPDCitiesTop10" FunctionName="Model.Store.spGetDPDCitiesTop10">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="Model.spGetDPDCitiesTop10_Result">
+                <ScalarProperty Name="cityId" ColumnName="cityId" />
+                <ScalarProperty Name="cityIdSpecified" ColumnName="cityIdSpecified" />
+                <ScalarProperty Name="countryCode" ColumnName="countryCode" />
+                <ScalarProperty Name="countryName" ColumnName="countryName" />
+                <ScalarProperty Name="regionCode" ColumnName="regionCode" />
+                <ScalarProperty Name="regionCodeSpecified" ColumnName="regionCodeSpecified" />
+                <ScalarProperty Name="regionName" ColumnName="regionName" />
+                <ScalarProperty Name="cityCode" ColumnName="cityCode" />
+                <ScalarProperty Name="cityName" ColumnName="cityName" />
+                <ScalarProperty Name="abbreviation" ColumnName="abbreviation" />
+                <ScalarProperty Name="indexMin" ColumnName="indexMin" />
+                <ScalarProperty Name="indexMax" ColumnName="indexMax" />
+                <ScalarProperty Name="Population" ColumnName="Population" />
+                <ScalarProperty Name="Settled" ColumnName="Settled" />
+                <ScalarProperty Name="lat" ColumnName="lat" />
+                <ScalarProperty Name="lng" ColumnName="lng" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="spGetTickerRates" FunctionName="Model.Store.spGetTickerRates">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="Model.spGetTickerRates_Result">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Acronim" ColumnName="Acronim" />
+                <ScalarProperty Name="Site" ColumnName="Site" />
+                <ScalarProperty Name="Buy" ColumnName="Buy" />
+                <ScalarProperty Name="Sell" ColumnName="Sell" />
+                <ScalarProperty Name="Date" ColumnName="Date" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>
@@ -109,7 +284,7 @@
         <DesignerProperty Name="EnablePluralization" Value="false" />
         <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
         <DesignerProperty Name="UseLegacyProvider" Value="false" />
-        <DesignerProperty Name="CodeGenerationStrategy" Value="Нет" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
       </DesignerInfoPropertySet>
     </Options>
     <!-- Diagram content (shape and connector positions) -->

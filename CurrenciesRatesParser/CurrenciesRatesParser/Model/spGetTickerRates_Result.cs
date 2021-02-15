@@ -10,9 +10,8 @@
 namespace CurrenciesRatesParser.Model
 {
     using System;
-    using System.Collections.Generic;
     
-    public partial class Rates
+    public partial class spGetTickerRates_Result
     {
         public long Id { get; set; }
         public string Acronim { get; set; }

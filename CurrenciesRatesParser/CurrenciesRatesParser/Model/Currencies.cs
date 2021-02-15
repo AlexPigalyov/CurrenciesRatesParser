@@ -12,13 +12,11 @@ namespace CurrenciesRatesParser.Model
     using System;
     using System.Collections.Generic;
     
-    public partial class Rates
+    public partial class Currencies
     {
-        public long Id { get; set; }
+        public int Id { get; set; }
+        public string Name { get; set; }
         public string Acronim { get; set; }
-        public string Site { get; set; }
-        public double Buy { get; set; }
-        public double Sell { get; set; }
-        public System.DateTime Date { get; set; }
+        public string Country { get; set; }
     }
 }
