@@ -1,6 +1,7 @@
 ﻿using Quartz;
 using Quartz.Impl;
 using System;
+using System.Configuration;
 
 namespace CurrenciesRatesParser
 {
@@ -8,7 +9,7 @@ namespace CurrenciesRatesParser
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Srvice start. Time: {0}", DateTime.Now.ToString("HH:mm:ss"));
+            Console.WriteLine("Service start. Time: {0}", DateTime.Now.ToString("HH:mm:ss"));
 
             ISchedulerFactory schedFact = new StdSchedulerFactory();
 
@@ -22,7 +23,7 @@ namespace CurrenciesRatesParser
             ITrigger trigger = TriggerBuilder.Create()
                 .StartNow()
                 .WithSimpleSchedule(x => x
-                    .WithIntervalInSeconds(60 * 4 + 30)
+                    .WithIntervalInSeconds(int.Parse(ConfigurationManager.AppSettings["ParserDelay"]))
                     .RepeatForever())
                 .Build();
 
