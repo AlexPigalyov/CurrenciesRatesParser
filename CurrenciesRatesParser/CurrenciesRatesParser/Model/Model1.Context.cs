@@ -26,6 +26,8 @@ namespace CurrenciesRatesParser.Model
         }
     
         public virtual DbSet<CoinsRates> CoinsRates { get; set; }
+        public virtual DbSet<DpdCities> DpdCities { get; set; }
         public virtual DbSet<Rates> Rates { get; set; }
+        public virtual DbSet<Currencies> Currencies { get; set; }
     }
 }

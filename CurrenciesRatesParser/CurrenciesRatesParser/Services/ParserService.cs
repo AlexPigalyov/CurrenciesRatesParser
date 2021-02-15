@@ -1,6 +1,8 @@
 ﻿using CurrenciesRatesParser.Model;
+using HtmlAgilityPack;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -26,10 +28,11 @@ namespace ratesRatesParser.Services
                     if (index == 8)
                     {
                         double price = double.Parse(item.Value.Replace(" ", ""));
-                        rates.Add(new Rates() 
+                        rates.Add(new Rates()
                         {
                             Acronim = "XAU",
-                            Price = price,
+                            Sell = price,
+                            Buy = price,
                             Date = DateTime.Now,
                             Site = site
                         });
@@ -40,7 +43,8 @@ namespace ratesRatesParser.Services
                         rates.Add(new Rates()
                         {
                             Acronim = "PAL",
-                            Price = price,
+                            Sell = price,
+                            Buy = price,
                             Date = DateTime.Now,
                             Site = site
                         });
@@ -51,7 +55,8 @@ namespace ratesRatesParser.Services
                         rates.Add(new Rates()
                         {
                             Acronim = "PL",
-                            Price = price,
+                            Sell = price,
+                            Buy = price,
                             Date = DateTime.Now,
                             Site = site
                         });
@@ -62,7 +67,8 @@ namespace ratesRatesParser.Services
                         rates.Add(new Rates()
                         {
                             Acronim = "XAG",
-                            Price = price,
+                            Sell = price,
+                            Buy = price,
                             Date = DateTime.Now,
                             Site = site
                         });
@@ -90,7 +96,7 @@ namespace ratesRatesParser.Services
                     "https://ru.exchange-rates.org/currentRates/F/USD"
                 };
 
-                foreach(string currentUrl in urls)
+                foreach (string currentUrl in urls)
                 {
                     var htmlCode = await client.DownloadStringTaskAsync(currentUrl);
                     var ratesMatches = Regex.Matches(htmlCode, "(?<a>)([0-9]+,[0-9]+)+(?=<)");
@@ -101,14 +107,59 @@ namespace ratesRatesParser.Services
                         rates.Add(new Rates()
                         {
                             Acronim = codeOfRatesMatches[i].Value.Split()[3],
-                            Price = price,
-                            Date = parsingStartTime ,
+                            Sell = price,
+                            Buy = price,
+                            Date = parsingStartTime,
                             Site = currentUrl
                         });
                     }
                 }
             }
             return rates;
+        }
+
+        public static async Task<List<CoinsRates>> GetCoinsRatesZolotoyZapas()
+        {
+            List<Rates> rates = new List<Rates>();
+            var web = new HtmlWeb();
+
+            string site = "https://www.zolotoy-zapas.ru/";
+
+            var doc = web.Load(site);
+
+            List<double> prices = doc.DocumentNode
+                .SelectNodes("//div[@class='coins-tile__price-val js-only-currency-rur']").ToList()
+                .Select(x => 
+                    double.Parse(
+                        x.InnerText
+                        .Replace("\n", "")
+                        .Trim()))
+                .Take(4).ToList();
+
+            var mmd = prices.Take(2).ToList();
+            var spmd = prices.Skip(2).ToList();
+
+            DateTime parseDate = DateTime.Now;
+
+            return new List<CoinsRates>
+            {
+                new CoinsRates()
+                {
+                    Acronim = "GPM",
+                    Sell = mmd[0],
+                    Buy = mmd[1],
+                    Date = parseDate,
+                    Site = site
+                },
+                new CoinsRates()
+                {
+                    Acronim = "GPS",
+                    Sell = spmd[0],
+                    Buy = spmd[1],
+                    Date = parseDate,
+                    Site = site
+                }
+            };
         }
     }
 }
