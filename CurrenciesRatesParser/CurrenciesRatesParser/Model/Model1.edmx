@@ -4,7 +4,7 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-      <Schema Namespace="Model.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+      <Schema Namespace="Хранилище Model" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="CoinsRates">
           <Key>
             <PropertyRef Name="Id" />
@@ -16,8 +16,8 @@
           <Property Name="Buy" Type="float" Nullable="false" />
           <Property Name="Date" Type="datetime" Nullable="false" />
         </EntityType>
-        <!--Errors Found During Generation:
-warning 6002: The table/view 'web-api.online.dbo.Currencies' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <!--Ошибки, обнаруженные при создании:
+предупреждение 6002: В таблице или представлении "web-api.online.dbo.Currencies" не определен первичный ключ. Ключ был выведен, а определение таблицы или представления было создано в режиме только для чтения.-->
         <EntityType Name="Currencies">
           <Key>
             <PropertyRef Name="Id" />
@@ -60,11 +60,7 @@ warning 6002: The table/view 'web-api.online.dbo.Currencies' does not have a pri
           <Property Name="Sell" Type="float" Nullable="false" />
           <Property Name="Date" Type="datetime" Nullable="false" />
         </EntityType>
-        <Function Name="spGetDPDCitiesTop10" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
-          <Parameter Name="text" Type="nvarchar" Mode="In" />
-        </Function>
-        <Function Name="spGetTickerRates" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
-        <EntityContainer Name="ModelStoreContainer">
+        <EntityContainer Name="Хранилище ModelContainer">
           <EntitySet Name="CoinsRates" EntityType="Self.CoinsRates" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="DpdCities" EntityType="Self.DpdCities" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Rates" EntityType="Self.Rates" Schema="dbo" store:Type="Tables" />
@@ -140,43 +136,13 @@ warning 6002: The table/view 'web-api.online.dbo.Currencies' does not have a pri
           <EntitySet Name="DpdCities" EntityType="Self.DpdCities" />
           <EntitySet Name="Rates" EntityType="Self.Rates" />
           <EntitySet Name="Currencies" EntityType="Self.Currencies" />
-          <FunctionImport Name="spGetDPDCitiesTop10" ReturnType="Collection(Model.spGetDPDCitiesTop10_Result)">
-            <Parameter Name="text" Mode="In" Type="String" />
-          </FunctionImport>
-          <FunctionImport Name="spGetTickerRates" ReturnType="Collection(Model.spGetTickerRates_Result)" />
         </EntityContainer>
-        <ComplexType Name="spGetDPDCitiesTop10_Result">
-          <Property Type="Int64" Name="cityId" Nullable="false" />
-          <Property Type="Boolean" Name="cityIdSpecified" Nullable="false" />
-          <Property Type="String" Name="countryCode" Nullable="false" MaxLength="50" />
-          <Property Type="String" Name="countryName" Nullable="false" MaxLength="50" />
-          <Property Type="Int32" Name="regionCode" Nullable="false" />
-          <Property Type="Boolean" Name="regionCodeSpecified" Nullable="false" />
-          <Property Type="String" Name="regionName" Nullable="false" MaxLength="100" />
-          <Property Type="String" Name="cityCode" Nullable="false" MaxLength="50" />
-          <Property Type="String" Name="cityName" Nullable="false" MaxLength="100" />
-          <Property Type="String" Name="abbreviation" Nullable="false" MaxLength="50" />
-          <Property Type="String" Name="indexMin" Nullable="true" MaxLength="50" />
-          <Property Type="String" Name="indexMax" Nullable="true" MaxLength="50" />
-          <Property Type="Int64" Name="Population" Nullable="true" />
-          <Property Type="String" Name="Settled" Nullable="true" MaxLength="20" />
-          <Property Type="Double" Name="lat" Nullable="true" />
-          <Property Type="Double" Name="lng" Nullable="true" />
-        </ComplexType>
-        <ComplexType Name="spGetTickerRates_Result">
-          <Property Type="Int64" Name="Id" Nullable="false" />
-          <Property Type="String" Name="Acronim" Nullable="false" MaxLength="10" />
-          <Property Type="String" Name="Site" Nullable="false" MaxLength="150" />
-          <Property Type="Double" Name="Buy" Nullable="false" />
-          <Property Type="Double" Name="Sell" Nullable="false" />
-          <Property Type="DateTime" Name="Date" Nullable="false" Precision="23" />
-        </ComplexType>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
     <edmx:Mappings>
       <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
-        <EntityContainerMapping StorageEntityContainer="ModelStoreContainer" CdmEntityContainer="Entities">
+        <EntityContainerMapping StorageEntityContainer="Хранилище ModelContainer" CdmEntityContainer="Entities">
           <EntitySetMapping Name="CoinsRates">
             <EntityTypeMapping TypeName="Model.CoinsRates">
               <MappingFragment StoreEntitySet="CoinsRates">
@@ -233,40 +199,6 @@ warning 6002: The table/view 'web-api.online.dbo.Currencies' does not have a pri
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <FunctionImportMapping FunctionImportName="spGetDPDCitiesTop10" FunctionName="Model.Store.spGetDPDCitiesTop10">
-            <ResultMapping>
-              <ComplexTypeMapping TypeName="Model.spGetDPDCitiesTop10_Result">
-                <ScalarProperty Name="cityId" ColumnName="cityId" />
-                <ScalarProperty Name="cityIdSpecified" ColumnName="cityIdSpecified" />
-                <ScalarProperty Name="countryCode" ColumnName="countryCode" />
-                <ScalarProperty Name="countryName" ColumnName="countryName" />
-                <ScalarProperty Name="regionCode" ColumnName="regionCode" />
-                <ScalarProperty Name="regionCodeSpecified" ColumnName="regionCodeSpecified" />
-                <ScalarProperty Name="regionName" ColumnName="regionName" />
-                <ScalarProperty Name="cityCode" ColumnName="cityCode" />
-                <ScalarProperty Name="cityName" ColumnName="cityName" />
-                <ScalarProperty Name="abbreviation" ColumnName="abbreviation" />
-                <ScalarProperty Name="indexMin" ColumnName="indexMin" />
-                <ScalarProperty Name="indexMax" ColumnName="indexMax" />
-                <ScalarProperty Name="Population" ColumnName="Population" />
-                <ScalarProperty Name="Settled" ColumnName="Settled" />
-                <ScalarProperty Name="lat" ColumnName="lat" />
-                <ScalarProperty Name="lng" ColumnName="lng" />
-              </ComplexTypeMapping>
-            </ResultMapping>
-          </FunctionImportMapping>
-          <FunctionImportMapping FunctionImportName="spGetTickerRates" FunctionName="Model.Store.spGetTickerRates">
-            <ResultMapping>
-              <ComplexTypeMapping TypeName="Model.spGetTickerRates_Result">
-                <ScalarProperty Name="Id" ColumnName="Id" />
-                <ScalarProperty Name="Acronim" ColumnName="Acronim" />
-                <ScalarProperty Name="Site" ColumnName="Site" />
-                <ScalarProperty Name="Buy" ColumnName="Buy" />
-                <ScalarProperty Name="Sell" ColumnName="Sell" />
-                <ScalarProperty Name="Date" ColumnName="Date" />
-              </ComplexTypeMapping>
-            </ResultMapping>
-          </FunctionImportMapping>
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>
@@ -284,7 +216,7 @@ warning 6002: The table/view 'web-api.online.dbo.Currencies' does not have a pri
         <DesignerProperty Name="EnablePluralization" Value="false" />
         <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
         <DesignerProperty Name="UseLegacyProvider" Value="false" />
-        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="Нет" />
       </DesignerInfoPropertySet>
     </Options>
     <!-- Diagram content (shape and connector positions) -->
