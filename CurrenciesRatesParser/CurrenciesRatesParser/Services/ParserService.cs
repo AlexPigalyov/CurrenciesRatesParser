@@ -29,7 +29,7 @@ namespace ratesRatesParser.Services
                         rates.Add(new Rates() 
                         {
                             Acronim = "XAU",
-                            Price = price,
+                            Sell = price,
                             Date = DateTime.Now,
                             Site = site
                         });
@@ -40,7 +40,7 @@ namespace ratesRatesParser.Services
                         rates.Add(new Rates()
                         {
                             Acronim = "PAL",
-                            Price = price,
+                            Sell = price,
                             Date = DateTime.Now,
                             Site = site
                         });
@@ -51,7 +51,7 @@ namespace ratesRatesParser.Services
                         rates.Add(new Rates()
                         {
                             Acronim = "PL",
-                            Price = price,
+                            Sell = price,
                             Date = DateTime.Now,
                             Site = site
                         });
@@ -62,7 +62,7 @@ namespace ratesRatesParser.Services
                         rates.Add(new Rates()
                         {
                             Acronim = "XAG",
-                            Price = price,
+                            Sell = price,
                             Date = DateTime.Now,
                             Site = site
                         });
@@ -101,7 +101,7 @@ namespace ratesRatesParser.Services
                         rates.Add(new Rates()
                         {
                             Acronim = codeOfRatesMatches[i].Value.Split()[3],
-                            Price = price,
+                            Sell = price,
                             Date = parsingStartTime ,
                             Site = currentUrl
                         });
