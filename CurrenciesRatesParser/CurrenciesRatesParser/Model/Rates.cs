@@ -15,7 +15,9 @@ namespace CurrenciesRatesParser.Model
     public partial class Rates
     {
         public long Id { get; set; }
+        public string Acronim { get; set; }
+        public string Site { get; set; }
+        public double Price { get; set; }
         public System.DateTime Date { get; set; }
-        public string Value { get; set; }
     }
 }
