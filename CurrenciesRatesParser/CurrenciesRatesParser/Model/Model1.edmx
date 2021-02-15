@@ -23,7 +23,8 @@
           <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="Acronim" Type="nvarchar" MaxLength="10" Nullable="false" />
           <Property Name="Site" Type="nvarchar" MaxLength="150" Nullable="false" />
-          <Property Name="Price" Type="float" Nullable="false" />
+          <Property Name="Buy" Type="float" Nullable="false" />
+          <Property Name="Sell" Type="float" Nullable="false" />
           <Property Name="Date" Type="datetime" Nullable="false" />
         </EntityType>
         <EntityContainer Name="Хранилище ModelContainer">
@@ -53,7 +54,8 @@
           <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="Acronim" Type="String" MaxLength="10" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="Site" Type="String" MaxLength="150" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="Price" Type="Double" Nullable="false" />
+          <Property Name="Buy" Type="Double" Nullable="false" />
+          <Property Name="Sell" Type="Double" Nullable="false" />
           <Property Name="Date" Type="DateTime" Nullable="false" Precision="3" />
         </EntityType>
         <EntityContainer Name="Entities" annotation:LazyLoadingEnabled="true">
@@ -84,7 +86,8 @@
                 <ScalarProperty Name="Id" ColumnName="Id" />
                 <ScalarProperty Name="Acronim" ColumnName="Acronim" />
                 <ScalarProperty Name="Site" ColumnName="Site" />
-                <ScalarProperty Name="Price" ColumnName="Price" />
+                <ScalarProperty Name="Buy" ColumnName="Buy" />
+                <ScalarProperty Name="Sell" ColumnName="Sell" />
                 <ScalarProperty Name="Date" ColumnName="Date" />
               </MappingFragment>
             </EntityTypeMapping>
