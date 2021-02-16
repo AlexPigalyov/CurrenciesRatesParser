@@ -1,4 +1,5 @@
-﻿using Quartz;
+﻿using CurrenciesRatesParser.Necromant24;
+using Quartz;
 using Quartz.Impl;
 using System;
 using System.Configuration;
@@ -9,6 +10,9 @@ namespace CurrenciesRatesParser
     {
         static void Main(string[] args)
         {
+
+            Parser.Parse();
+
             Console.WriteLine("Service start. Time: {0}", DateTime.Now.ToString("HH:mm:ss"));
 
             ISchedulerFactory schedFact = new StdSchedulerFactory();
