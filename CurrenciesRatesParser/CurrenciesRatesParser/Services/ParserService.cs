@@ -121,7 +121,6 @@ namespace ratesRatesParser.Services
 
         public static async Task<List<CoinsRates>> GetCoinsRatesZolotoyZapas()
         {
-            List<Rates> rates = new List<Rates>();
             var web = new HtmlWeb();
 
             string site = "https://www.zolotoy-zapas.ru/";
@@ -130,12 +129,13 @@ namespace ratesRatesParser.Services
 
             List<double> prices = doc.DocumentNode
                 .SelectNodes("//div[@class='coins-tile__price-val js-only-currency-rur']").ToList()
+                .Take(4)
                 .Select(x =>
                     double.Parse(
                         x.InnerText
                         .Replace("\n", "")
                         .Trim()))
-                .Take(4).ToList();
+                .ToList();
 
             var mmd = prices.Take(2).ToList();
             var spmd = prices.Skip(2).ToList();
@@ -157,6 +157,112 @@ namespace ratesRatesParser.Services
                     Acronim = "GPS",
                     Sell = spmd[0],
                     Buy = spmd[1],
+                    Date = parseDate,
+                    Site = site
+                }
+            };
+        }
+
+        public static async Task<List<CoinsRates>> GetCoinsRatesZolotoyClub()
+        {
+            var web = new HtmlWeb();
+
+            string site = "https://www.zolotoy-club.ru/";
+
+            var doc = await web.LoadFromWebAsync(site);
+
+            double sellPriceSPMD = double.Parse(doc.DocumentNode
+                .SelectNodes("//span[@style='color: rgb(253, 0, 0);']")
+                .First().InnerText
+                    .Replace("RU", "")
+                    .Trim());
+
+            double sellPriceMMD = double.Parse(doc.DocumentNode
+                .SelectNodes("//span[@style='color: rgb(255, 3, 3);']")
+                .First().InnerText
+                    .Replace("RU", "")
+                    .Trim());
+
+            double buyPriceSPMD = double.Parse(doc.DocumentNode
+                .SelectNodes("//span[@style='color: rgb(251, 0, 0);']")
+                .First().InnerText
+                    .Replace("RU", "")
+                    .Trim());
+
+            double buyPriceMMD = double.Parse(doc.DocumentNode
+                .SelectNodes("//span[@style='color: rgb(255, 0, 0);']")
+                .First().InnerText
+                    .Replace("RU", "")
+                    .Trim());
+
+            DateTime parseDate = DateTime.Now;
+
+            return new List<CoinsRates>
+            {
+                new CoinsRates()
+                {
+                    Acronim = "GPM",
+                    Sell = sellPriceMMD,
+                    Buy = buyPriceMMD,
+                    Date = parseDate,
+                    Site = site
+                },
+                new CoinsRates()
+                {
+                    Acronim = "GPS",
+                    Sell = sellPriceSPMD,
+                    Buy = buyPriceSPMD,
+                    Date = parseDate,
+                    Site = site
+                }
+            };
+        }
+
+        public static async Task<List<CoinsRates>> GetCoinsRatesZolotoMD()
+        {
+            var web = new HtmlWeb();
+
+            string site = "https://zoloto-md.ru/bullion-coins";
+
+            var doc = await web.LoadFromWebAsync(site);
+
+            List<double> sellPrices = doc.DocumentNode
+                .SelectNodes("//span[@class='js-price-club']").ToList()
+                .Take(3)
+                .Select(x =>
+                    double.Parse(
+                        x.InnerText
+                        .Replace("Руб.", "")
+                        .Trim()))
+                .ToList();
+
+            List<double> buyPrices = doc.DocumentNode
+                .SelectNodes("//span[@class='js-price-buyout']").ToList()
+                .Take(3)
+                .Select(x =>
+                    double.Parse(
+                        x.InnerText
+                        .Replace("Руб.", "")
+                        .Trim()))
+                .ToList();
+
+            DateTime parseDate = DateTime.Now;
+
+            return new List<CoinsRates>
+            {
+                new CoinsRates()
+                {
+                    Acronim = "GPM",
+                    Sell = sellPrices[2],
+                    Buy = buyPrices[2],
+                    Date = parseDate,
+                    Site = site
+                },
+                new CoinsRates()
+                {
+                    Acronim = "GPS",
+                    Sell = sellPrices[0],
+                    Buy = buyPrices[2],
                     Date = parseDate,
                     Site = site
                 }
