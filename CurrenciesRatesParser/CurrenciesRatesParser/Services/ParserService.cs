@@ -78,6 +78,7 @@ namespace ratesRatesParser.Services
             }
             return rates;
         }
+
         public static async Task<List<Rates>> GetCurrencyRates()
         {
             DateTime parsingStartTime = DateTime.Now;
@@ -125,11 +126,11 @@ namespace ratesRatesParser.Services
 
             string site = "https://www.zolotoy-zapas.ru/";
 
-            var doc = web.Load(site);
+            var doc = await web.LoadFromWebAsync(site);
 
             List<double> prices = doc.DocumentNode
                 .SelectNodes("//div[@class='coins-tile__price-val js-only-currency-rur']").ToList()
-                .Select(x => 
+                .Select(x =>
                     double.Parse(
                         x.InnerText
                         .Replace("\n", "")
