@@ -318,7 +318,7 @@ namespace ratesRatesParser.Services
               .Split('р')[0]
               .Trim();
 
-            var buyCointSPMD = cointMMD.InnerText
+            var buyCointSPMD = cointSPMD.InnerText
                .Split(new string[] { "Покупка:" }, StringSplitOptions.None)[1]
              .Split('р')[0]
              .Trim();
