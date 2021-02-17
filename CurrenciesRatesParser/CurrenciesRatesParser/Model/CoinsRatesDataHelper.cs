@@ -14,8 +14,6 @@ namespace CurrenciesRatesParser.Model
                     ctx.CoinsRates.AddRange(rates);
                     ctx.SaveChanges();
                 }
-
-                Console.WriteLine("CoinsRates saved. Time: {0}", DateTime.Now.ToString("HH:mm:ss"));
             }
             catch (Exception ex)
             {
