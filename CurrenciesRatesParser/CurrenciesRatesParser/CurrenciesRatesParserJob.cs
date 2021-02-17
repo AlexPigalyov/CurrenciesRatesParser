@@ -18,25 +18,31 @@ namespace CurrenciesRatesParser
             Task<List<CoinsRates>> coinsRatesZolotoyZapasTask = ParserService.GetCoinsRatesZolotoyZapas();
             Task<List<CoinsRates>> coinsRatesZolotoMDTask = ParserService.GetCoinsRatesZolotoMD();
             Task<List<CoinsRates>> coinsRatesZolotoyClubTask = ParserService.GetCoinsRatesZolotoyClub();
+            Task<List<CoinsRates>> coinsRatesMonetaInvestTask = ParserService.GetCoinsRatesMonetaInvest();
+
 
             await Task.WhenAll(
                 echangeRatesTask,
                 metalRatesTask,
                 coinsRatesZolotoyZapasTask,
                 coinsRatesZolotoyClubTask,
-                coinsRatesZolotoMDTask);
+                coinsRatesZolotoMDTask,
+                coinsRatesMonetaInvestTask);
 
             List<Rates> exchangeyRates = await echangeRatesTask;
             List<Rates> metalRates = await metalRatesTask;
             List<CoinsRates> coinsRatesZolotoyZapas = await coinsRatesZolotoyZapasTask;
             List<CoinsRates> coinsRatesZolotoMD = await coinsRatesZolotoMDTask;
             List<CoinsRates> coinsRatesZolotoyClub = await coinsRatesZolotoyClubTask;
+            List<CoinsRates> coinsRatesMonetaInvest = await coinsRatesMonetaInvestTask;
+
 
             RatesDataHelper.AddRatesRange(exchangeyRates);
             RatesDataHelper.AddRatesRange(metalRates);
             CoinsRatesDataHelper.AddCoinsRatesRange(coinsRatesZolotoyZapas);
             CoinsRatesDataHelper.AddCoinsRatesRange(coinsRatesZolotoMD);
             CoinsRatesDataHelper.AddCoinsRatesRange(coinsRatesZolotoyClub);
+            CoinsRatesDataHelper.AddCoinsRatesRange(coinsRatesMonetaInvest);
         }
     }
 }

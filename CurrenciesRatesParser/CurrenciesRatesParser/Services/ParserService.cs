@@ -268,5 +268,84 @@ namespace ratesRatesParser.Services
                 }
             };
         }
+
+        public static async Task<List<CoinsRates>> GetCoinsRatesMonetaInvest()
+        {
+            List<CoinsRates> rates = new List<CoinsRates>();
+            var web = new HtmlWeb();
+
+            string site = "https://msk.monetainvest.ru/";
+
+            var doc = await web.LoadFromWebAsync(site);
+
+            var coints = doc.DocumentNode
+                .SelectNodes("//div[@class='monet1']").ToList(); // выбираем блоки монет
+
+
+            // фильтруем монеты по тексту
+            var cointMMD = coints.FirstOrDefault(e => e.InnerText.Contains("Георгий Победоносец") && e.InnerText.Contains("ММД"));
+            var cointSPMD = coints.FirstOrDefault(e => e.InnerText.Contains("Георгий Победоносец") && e.InnerText.Contains("СПМД"));
+
+            string saleCointMMD;
+            string saleCointSPMD;
+
+            try
+            {
+                saleCointMMD = cointMMD.InnerText
+                              .Split(new string[] { "Продажа:" }, StringSplitOptions.None)[1]
+                            .Split('р')[0]
+                            .Trim();
+            }
+            catch
+            {
+                saleCointMMD = "0";
+            }
+
+            try
+            {
+                saleCointSPMD = cointSPMD.InnerText
+                              .Split(new string[] { "Продажа:" }, StringSplitOptions.None)[1]
+                            .Split('р')[0]
+                            .Trim();
+            }
+            catch
+            {
+                saleCointSPMD = "0";
+            }
+
+            var buyCointMMD = cointMMD.InnerText
+                .Split(new string[] { "Покупка:" }, StringSplitOptions.None)[1]
+              .Split('р')[0]
+              .Trim();
+
+            var buyCointSPMD = cointMMD.InnerText
+               .Split(new string[] { "Покупка:" }, StringSplitOptions.None)[1]
+             .Split('р')[0]
+             .Trim();
+
+            DateTime parseDate = DateTime.Now;
+
+            rates.Add(
+                    new CoinsRates
+                    {
+                        Acronim = "MMD",
+                        Sell = double.Parse(saleCointMMD),
+                        Buy = double.Parse(buyCointMMD),
+                        Date = parseDate,
+                        Site = site
+                    });
+
+            rates.Add(
+                   new CoinsRates
+                   {
+                       Acronim = "SPMD",
+                       Sell = double.Parse(saleCointSPMD),
+                       Buy = double.Parse(buyCointSPMD),
+                       Date = parseDate,
+                       Site = site
+                   });
+
+            return rates;
+        }
     }
 }
