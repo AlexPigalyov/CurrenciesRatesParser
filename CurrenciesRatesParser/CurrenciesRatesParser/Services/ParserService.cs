@@ -162,5 +162,75 @@ namespace ratesRatesParser.Services
                 }
             };
         }
+
+        public static async Task<List<CoinsRates>> GetCoinsRatesMonetaInvest()
+        {
+            List<CoinsRates> rates = new List<CoinsRates>();
+            var web = new HtmlWeb();
+
+            string site = "https://msk.monetainvest.ru/";
+
+            var doc = await web.LoadFromWebAsync(site);
+
+            var coints = doc.DocumentNode
+                .SelectNodes("//div[@class='monet1']").ToList(); // выбираем блоки монет
+
+
+            // фильтруем монеты по тексту
+            var cointsMMD = coints.Where(e => e.InnerText.Contains("Георгий Победоносец") && e.InnerText.Contains("ММД")).ToList();
+            var cointsSPMD = coints.Where(e => e.InnerText.Contains("Георгий Победоносец") && e.InnerText.Contains("СПМД")).ToList();
+
+
+            //выбираем у монет блоки с ценами
+            var _cointsMMD = cointsMMD.Select(e => e.SelectSingleNode("//div[@class='mon-info']")).ToList();
+            var _cointsSPMD = cointsSPMD.Select(e => e.SelectSingleNode("//div[@class='mon-info']")).ToList();
+
+
+            DateTime parseDate = DateTime.Now;
+
+            foreach (var cointMMD in _cointsMMD)
+            {
+                var buy = cointMMD.SelectSingleNode("//span[@class = 'mon-sale']");
+                var sale = cointMMD.SelectSingleNode("//span[@class = 'mon-buy']");
+
+
+                var _buy = sale.InnerText.Split(' ');
+                var _sale = buy.InnerText.Split(' ');
+
+                rates.Add(
+                    new CoinsRates
+                    {
+                        Acronim = "MMD",
+                        Sell = double.Parse(_sale[1] + _sale[2]),
+                        Buy = double.Parse(_buy[1] + _buy[2]),
+                        Date = parseDate,
+                        Site = site
+                    });
+            }
+
+            foreach (var cointSPDM in _cointsSPMD)
+            {
+                var buy = cointSPDM.SelectSingleNode("//span[@class = 'mon-sale']");
+                var sale = cointSPDM.SelectSingleNode("//span[@class = 'mon-buy']");
+
+
+                var _buy = sale.InnerText.Split(' ');
+                var _sale = buy.InnerText.Split(' ');
+
+                rates.Add(
+                    new CoinsRates
+                    {
+                        Acronim = "SPDM",
+                        Sell = double.Parse(_sale[1] + _sale[2]),
+                        Buy = double.Parse(_buy[1] + _buy[2]),
+                        Date = parseDate,
+                        Site = site
+                    });
+            }
+
+            return null;
+        }
+
+
     }
 }
