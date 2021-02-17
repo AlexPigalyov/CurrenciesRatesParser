@@ -15,17 +15,20 @@ namespace CurrenciesRatesParser.Jobs
             Task<List<CoinsRates>> coinsRatesZolotoMDTask = ParserService.GetCoinsRatesZolotoMD();
             Task<List<CoinsRates>> coinsRatesZolotoyClubTask = ParserService.GetCoinsRatesZolotoyClub();
             Task<List<CoinsRates>> coinsRatesMotenaInvestTask = ParserService.GetCoinsRatesMonetaInvest();
+            Task<List<CoinsRates>> coinsRatesVFBankTask = ParserService.GetCoinsRatesVFBank();
 
             await Task.WhenAll(
                 coinsRatesZolotoyZapasTask,
                 coinsRatesZolotoyClubTask,
                 coinsRatesZolotoMDTask,
-                coinsRatesMotenaInvestTask);
+                coinsRatesMotenaInvestTask,
+                coinsRatesVFBankTask);
 
             List<CoinsRates> coinsRatesZolotoyZapas = await coinsRatesZolotoyZapasTask;
             List<CoinsRates> coinsRatesZolotoMD = await coinsRatesZolotoMDTask;
             List<CoinsRates> coinsRatesZolotoyClub = await coinsRatesZolotoyClubTask;
             List<CoinsRates> coinsRatesMotenaInvest = await coinsRatesMotenaInvestTask;
+            List<CoinsRates> coinsRatesVFBank = await coinsRatesVFBankTask;
 
             CoinsRatesDataHelper.AddCoinsRatesRange(coinsRatesZolotoyZapas);
             Console.WriteLine("Coins rates zolotoy zapas saved. Time: {0}", DateTime.Now.ToString("HH:mm:ss"));
@@ -35,6 +38,8 @@ namespace CurrenciesRatesParser.Jobs
             Console.WriteLine("Coins rates zolotoy club saved. Time: {0}", DateTime.Now.ToString("HH:mm:ss"));
             CoinsRatesDataHelper.AddCoinsRatesRange(coinsRatesMotenaInvest);
             Console.WriteLine("Coins rates moneta invest saved. Time: {0}", DateTime.Now.ToString("HH:mm:ss"));
+            CoinsRatesDataHelper.AddCoinsRatesRange(coinsRatesVFBank);
+            Console.WriteLine("Coins rates vfbank saved. Time: {0}", DateTime.Now.ToString("HH:mm:ss"));
         }
     }
 }
