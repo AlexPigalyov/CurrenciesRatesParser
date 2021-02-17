@@ -79,7 +79,7 @@ namespace ratesRatesParser.Services
             return rates;
         }
 
-        public static async Task<List<Rates>> GetCurrencyRates()
+        public static async Task<List<Rates>> GetExchangeRates()
         {
             DateTime parsingStartTime = DateTime.Now;
 

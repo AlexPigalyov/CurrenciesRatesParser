@@ -13,26 +13,26 @@ namespace CurrenciesRatesParser
     {
         public async Task Execute(IJobExecutionContext context)
         {
-            Task<List<Rates>> currencyRatesTask = ParserService.GetCurrencyRates();
+            Task<List<Rates>> echangeRatesTask = ParserService.GetExchangeRates();
             Task<List<Rates>> metalRatesTask = ParserService.GetMetalRates();
             Task<List<CoinsRates>> coinsRatesZolotoyZapasTask = ParserService.GetCoinsRatesZolotoyZapas();
             Task<List<CoinsRates>> coinsRatesZolotoMDTask = ParserService.GetCoinsRatesZolotoMD();
             Task<List<CoinsRates>> coinsRatesZolotoyClubTask = ParserService.GetCoinsRatesZolotoyClub();
 
             await Task.WhenAll(
-                currencyRatesTask,
+                echangeRatesTask,
                 metalRatesTask,
                 coinsRatesZolotoyZapasTask,
                 coinsRatesZolotoyClubTask,
                 coinsRatesZolotoMDTask);
 
-            List<Rates> currencyRates = await currencyRatesTask;
+            List<Rates> exchangeyRates = await echangeRatesTask;
             List<Rates> metalRates = await metalRatesTask;
             List<CoinsRates> coinsRatesZolotoyZapas = await coinsRatesZolotoyZapasTask;
             List<CoinsRates> coinsRatesZolotoMD = await coinsRatesZolotoMDTask;
             List<CoinsRates> coinsRatesZolotoyClub = await coinsRatesZolotoyClubTask;
 
-            RatesDataHelper.AddRatesRange(currencyRates);
+            RatesDataHelper.AddRatesRange(exchangeyRates);
             RatesDataHelper.AddRatesRange(metalRates);
             CoinsRatesDataHelper.AddCoinsRatesRange(coinsRatesZolotoyZapas);
             CoinsRatesDataHelper.AddCoinsRatesRange(coinsRatesZolotoMD);
