@@ -177,58 +177,69 @@ namespace ratesRatesParser.Services
 
 
             // фильтруем монеты по тексту
-            var cointsMMD = coints.Where(e => e.InnerText.Contains("Георгий Победоносец") && e.InnerText.Contains("ММД")).ToList();
-            var cointsSPMD = coints.Where(e => e.InnerText.Contains("Георгий Победоносец") && e.InnerText.Contains("СПМД")).ToList();
+            var cointMMD = coints.FirstOrDefault(e => e.InnerText.Contains("Георгий Победоносец") && e.InnerText.Contains("ММД"));
+            var cointSPMD = coints.FirstOrDefault(e => e.InnerText.Contains("Георгий Победоносец") && e.InnerText.Contains("СПМД"));
 
+            string saleCointMMD;
+            string saleCointSPMD;
 
-            //выбираем у монет блоки с ценами
-            var _cointsMMD = cointsMMD.Select(e => e.SelectSingleNode("//div[@class='mon-info']")).ToList();
-            var _cointsSPMD = cointsSPMD.Select(e => e.SelectSingleNode("//div[@class='mon-info']")).ToList();
+            try
+            {
+                saleCointMMD = cointMMD.InnerText
+                              .Split(new string[] { "Продажа:" }, StringSplitOptions.None)[1]
+                            .Split('р')[0]
+                            .Trim();
+            }
+            catch
+            {
+                saleCointMMD = "0";
+            }
 
+            try
+            {
+                saleCointSPMD = cointSPMD.InnerText
+                              .Split(new string[] { "Продажа:" }, StringSplitOptions.None)[1]
+                            .Split('р')[0]
+                            .Trim();
+            }
+            catch
+            {
+                saleCointSPMD = "0";
+            }
+
+            var buyCointMMD = cointMMD.InnerText
+                .Split(new string[] { "Покупка:" }, StringSplitOptions.None)[1]
+              .Split('р')[0]
+              .Trim();
+
+            var buyCointSPMD = cointMMD.InnerText
+               .Split(new string[] { "Покупка:" }, StringSplitOptions.None)[1]
+             .Split('р')[0]
+             .Trim();
 
             DateTime parseDate = DateTime.Now;
 
-            foreach (var cointMMD in _cointsMMD)
-            {
-                var buy = cointMMD.SelectSingleNode("//span[@class = 'mon-sale']");
-                var sale = cointMMD.SelectSingleNode("//span[@class = 'mon-buy']");
-
-
-                var _buy = sale.InnerText.Split(' ');
-                var _sale = buy.InnerText.Split(' ');
-
-                rates.Add(
+            rates.Add(
                     new CoinsRates
                     {
                         Acronim = "MMD",
-                        Sell = double.Parse(_sale[1] + _sale[2]),
-                        Buy = double.Parse(_buy[1] + _buy[2]),
+                        Sell = double.Parse(saleCointMMD),
+                        Buy = double.Parse(buyCointMMD),
                         Date = parseDate,
                         Site = site
                     });
-            }
 
-            foreach (var cointSPDM in _cointsSPMD)
-            {
-                var buy = cointSPDM.SelectSingleNode("//span[@class = 'mon-sale']");
-                var sale = cointSPDM.SelectSingleNode("//span[@class = 'mon-buy']");
+            rates.Add(
+                   new CoinsRates
+                   {
+                       Acronim = "SPMD",
+                       Sell = double.Parse(saleCointSPMD),
+                       Buy = double.Parse(buyCointSPMD),
+                       Date = parseDate,
+                       Site = site
+                   });
 
-
-                var _buy = sale.InnerText.Split(' ');
-                var _sale = buy.InnerText.Split(' ');
-
-                rates.Add(
-                    new CoinsRates
-                    {
-                        Acronim = "SPDM",
-                        Sell = double.Parse(_sale[1] + _sale[2]),
-                        Buy = double.Parse(_buy[1] + _buy[2]),
-                        Date = parseDate,
-                        Site = site
-                    });
-            }
-
-            return null;
+            return rates;
         }
 
 

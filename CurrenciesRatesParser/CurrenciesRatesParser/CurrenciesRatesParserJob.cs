@@ -16,16 +16,20 @@ namespace CurrenciesRatesParser
             Task<List<Rates>> currencyRatesTask = ParserService.GetCurrencyRates();
             Task<List<Rates>> metalRatesTask = ParserService.GetMetalRates();
             Task<List<CoinsRates>> coinsRatesZolotoyZapasTask = ParserService.GetCoinsRatesZolotoyZapas();
+            Task<List<CoinsRates>> coinsRatesMonetaInvestTask = ParserService.GetCoinsRatesMonetaInvest();
 
-            await Task.WhenAll(currencyRatesTask, metalRatesTask, coinsRatesZolotoyZapasTask);
+            await Task.WhenAll(currencyRatesTask, metalRatesTask, coinsRatesZolotoyZapasTask, coinsRatesMonetaInvestTask);
 
             List<Rates> currencyRates = await currencyRatesTask;
             List<Rates> metalRates = await metalRatesTask;
             List<CoinsRates> coinsRatesZolotoyZapas = await coinsRatesZolotoyZapasTask;
+            List<CoinsRates> coinsRatesMonetaInvest = await coinsRatesMonetaInvestTask;
+
 
             RatesDataHelper.AddRatesRange(currencyRates);
             RatesDataHelper.AddRatesRange(metalRates);
             CoinsRatesDataHelper.AddCoinsRatesRange(coinsRatesZolotoyZapas);
+            CoinsRatesDataHelper.AddCoinsRatesRange(coinsRatesMonetaInvest);
         }
     }
 }
