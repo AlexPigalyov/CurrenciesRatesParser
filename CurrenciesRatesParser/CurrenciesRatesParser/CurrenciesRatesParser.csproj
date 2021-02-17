@@ -89,7 +89,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CurrenciesRatesParserJob.cs" />
+    <Compile Include="Jobs\CoinRatesParserJob.cs" />
+    <Compile Include="Jobs\ExchangeRatesParserJob.cs" />
+    <Compile Include="Jobs\MetalRatesParserJob.cs" />
     <Compile Include="Model\CoinsRates.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
