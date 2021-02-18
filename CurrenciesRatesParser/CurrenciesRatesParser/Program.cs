@@ -13,7 +13,7 @@ namespace CurrenciesRatesParser
         static void Main(string[] args)
         {
             // Necroman24 9999d.ru parser use
-            //Parser.Parse();
+            Parser.Parse();
 
             Console.WriteLine("Service start. Time: {0}", DateTime.Now.ToString("HH:mm:ss"));
 

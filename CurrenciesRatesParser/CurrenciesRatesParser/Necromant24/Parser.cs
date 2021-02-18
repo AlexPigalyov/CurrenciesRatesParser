@@ -30,6 +30,19 @@ namespace CurrenciesRatesParser.Necromant24
         static List<CoinsRates> parse_9999d_ru_GPM()
         {
 
+            List<CoinsRates> coins = new List<CoinsRates>();
+
+            var nodesXPathGPM = "//div[@id='bx_651765591_51184']/div[@class='inner-wrap']/div[@class='text']";
+
+            var nodesXPathGPS = "//div[@id='bx_651765591_51290']/div[@class='inner-wrap']/div[@class='text']";
+
+
+            coins.Add( parseCoin(nodesXPathGPM));
+
+            coins.Add(parseCoin(nodesXPathGPS));
+
+
+
             var site = @"https://9999d.ru/";
 
             HtmlWeb web = new HtmlWeb();
@@ -44,10 +57,7 @@ namespace CurrenciesRatesParser.Necromant24
             var htmlDoc2 = new HtmlDocument();
             htmlDoc2.LoadHtml("<div>"+node.InnerHtml+"</div>");
 
-            var nodesXPathGPM = "//div[@id='bx_651765591_51184']/div[@class='inner-wrap']/div[@class='text']";
-
-            var nodesXPathGPS = "//div[@id='bx_651765591_51290']/div[@class='inner-wrap']/div[@class='text']";
-
+            
             bool fExists = File.Exists("some.html");
 
             
@@ -78,7 +88,7 @@ namespace CurrenciesRatesParser.Necromant24
 
             pricePairGPS = pricePairGPS.Select(x => x.Replace("₽", "")).ToArray();
 
-            List<CoinsRates> coins = new List<CoinsRates>();
+            
 
             CoinsRates coinGPM = new CoinsRates()
             {
@@ -119,6 +129,69 @@ namespace CurrenciesRatesParser.Necromant24
             //Console.WriteLine("Node Name: " + node.Name + "\n" + node.OuterHtml);
             return coins;
         }
+
+
+
+        static CoinsRates parseCoin(string xpath)
+        {
+            var site = @"https://9999d.ru/";
+
+            HtmlWeb web = new HtmlWeb();
+
+            var htmlDoc = web.Load(site);
+
+            var selector = "//div[@class='catalog item-views table catalog_table_2' and @data-slice='Y']";
+
+            var node = htmlDoc.DocumentNode.SelectSingleNode(selector);
+
+
+            var htmlDoc2 = new HtmlDocument();
+            htmlDoc2.LoadHtml("<div>" + node.InnerHtml + "</div>");
+
+            
+
+
+
+
+            var nodeCoin = htmlDoc2.DocumentNode.SelectSingleNode(xpath);
+
+
+
+            var innerText = Regex.Replace(nodeCoin.InnerText, @"\s+", " ");
+
+
+            var prices = GetBetweenTwoWords("ПРОДАЖА", "Цена за грамм", innerText);
+
+
+
+
+
+
+            var pricePair = prices.Split(new string[1] { "ПОКУПКА" }, StringSplitOptions.RemoveEmptyEntries);
+
+
+            pricePair = pricePair.Select(x => x.Replace("₽", "")).ToArray();
+
+
+
+            CoinsRates coin = new CoinsRates()
+            {
+                Date = DateTime.Now,
+                Site = site,
+                Acronim = "GPM"
+            };
+
+            coin.Sell = double.Parse(pricePair[0]);
+            coin.Buy = double.Parse(pricePair[1]);
+
+            return coin;
+        }
+
+
+
+
+
+
 
 
         //static async void parse_9999d_ru_GPS()
@@ -173,16 +246,7 @@ namespace CurrenciesRatesParser.Necromant24
         }
 
 
-        static CoinsRates parseCoin(string html)
-        {
-            CoinsRates coin = new CoinsRates();
-
-
-
-
-
-            return coin;
-        }
+        
 
 
 
