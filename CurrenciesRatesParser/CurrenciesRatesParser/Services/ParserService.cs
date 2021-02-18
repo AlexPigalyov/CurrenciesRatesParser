@@ -73,6 +73,7 @@ namespace ratesRatesParser.Services
                             Site = site
                         });
                     }
+                    else if (index > 30) break;
                     index++;
                 }
             }
