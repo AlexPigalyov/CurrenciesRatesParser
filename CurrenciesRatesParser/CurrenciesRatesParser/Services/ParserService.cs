@@ -429,6 +429,60 @@ namespace ratesRatesParser.Services
         }
 
 
+        public static async Task<List<CoinsRates>> GetCoinsRatesRshbRu()
+        {
+            List<CoinsRates> coins = new List<CoinsRates>();
+            
+            var selectorGPM = "//a[@id='detailCoin_202657' and @class='b-coins-items-item-head-lnk']";
+
+            var selectorGPS = "//a[@id='detailCoin_17891' and @class='b-coins-items-item-head-lnk']";
+
+            coins.Add(getRshbRuCoin(selectorGPM, "GPM").Result);
+            coins.Add(getRshbRuCoin(selectorGPS, "GPS").Result);
+
+
+            return coins;
+        }
+
+
+
+        static async Task<CoinsRates> getRshbRuCoin(string xpath,string acronim)
+        {
+            var site = @"https://www.rshb.ru/natural/coins/";
+
+            HtmlWeb web = new HtmlWeb();
+
+            var htmlDoc = web.Load(site);
+
+            var idLink = htmlDoc.DocumentNode.SelectSingleNode(xpath);
+
+            var coinNode = idLink.ParentNode.ParentNode.ParentNode;
+
+            var coinHtmlDoc = new HtmlDocument();
+            coinHtmlDoc.LoadHtml("<div>" + coinNode.InnerHtml + "</div>");
+
+
+            string buySelect = "//span[@class='b-coins-items-item-cost-b']";
+            string sellSelect = "//div[@class='b-coins-items-item-quotes-price  ']";
+
+            string buyPrice = coinHtmlDoc.DocumentNode.SelectSingleNode(buySelect).InnerText.Replace("Р", "");
+            string sellPrice = coinHtmlDoc.DocumentNode.SelectSingleNode(sellSelect).InnerText.Replace("Р", "");
+
+
+            CoinsRates coin = new CoinsRates()
+            {
+                Acronim = acronim,
+                Date = DateTime.Now,
+                Site = site
+            };
+
+            coin.Buy = double.Parse(buyPrice);
+            coin.Sell = double.Parse(sellPrice);
+            
+            return coin;
+        }
+
+
         public static async Task<List<CoinsRates>> GetCoinsRatesRicgoldCom()
         {
             string urlMMD = @"https://www.ricgold.com/shop/investitsionnye-monety-6/zolotaya--moneta-georgij-pobedonosets-mmd-2006-2020-gg-388/";
