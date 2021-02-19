@@ -4,7 +4,7 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-      <Schema Namespace="Хранилище Model" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+      <Schema Namespace="Model.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="CoinsRates">
           <Key>
             <PropertyRef Name="Id" />
@@ -16,8 +16,8 @@
           <Property Name="Buy" Type="float" Nullable="false" />
           <Property Name="Date" Type="datetime" Nullable="false" />
         </EntityType>
-        <!--Ошибки, обнаруженные при создании:
-предупреждение 6002: В таблице или представлении "web-api.online.dbo.Currencies" не определен первичный ключ. Ключ был выведен, а определение таблицы или представления было создано в режиме только для чтения.-->
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'web-api.online.dbo.Currencies' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="Currencies">
           <Key>
             <PropertyRef Name="Id" />
@@ -60,7 +60,7 @@
           <Property Name="Sell" Type="float" Nullable="false" />
           <Property Name="Date" Type="datetime" Nullable="false" />
         </EntityType>
-        <EntityContainer Name="Хранилище ModelContainer">
+        <EntityContainer Name="ModelStoreContainer">
           <EntitySet Name="CoinsRates" EntityType="Self.CoinsRates" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="DpdCities" EntityType="Self.DpdCities" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Rates" EntityType="Self.Rates" Schema="dbo" store:Type="Tables" />
@@ -78,7 +78,7 @@
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="Model" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
-        <EntityType Name="CoinsRates">
+        <EntityType Name="CoinsRate">
           <Key>
             <PropertyRef Name="Id" />
           </Key>
@@ -89,7 +89,7 @@
           <Property Name="Buy" Type="Double" Nullable="false" />
           <Property Name="Date" Type="DateTime" Nullable="false" Precision="3" />
         </EntityType>
-        <EntityType Name="DpdCities">
+        <EntityType Name="DpdCity">
           <Key>
             <PropertyRef Name="cityId" />
           </Key>
@@ -110,7 +110,7 @@
           <Property Name="lat" Type="Double" />
           <Property Name="lng" Type="Double" />
         </EntityType>
-        <EntityType Name="Rates">
+        <EntityType Name="Rate">
           <Key>
             <PropertyRef Name="Id" />
           </Key>
@@ -121,7 +121,7 @@
           <Property Name="Sell" Type="Double" Nullable="false" />
           <Property Name="Date" Type="DateTime" Nullable="false" Precision="3" />
         </EntityType>
-        <EntityType Name="Currencies">
+        <EntityType Name="Currency">
           <Key>
             <PropertyRef Name="Id" />
             <PropertyRef Name="Name" />
@@ -132,19 +132,19 @@
           <Property Name="Country" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
         </EntityType>
         <EntityContainer Name="Entities" annotation:LazyLoadingEnabled="true">
-          <EntitySet Name="CoinsRates" EntityType="Self.CoinsRates" />
-          <EntitySet Name="DpdCities" EntityType="Self.DpdCities" />
-          <EntitySet Name="Rates" EntityType="Self.Rates" />
-          <EntitySet Name="Currencies" EntityType="Self.Currencies" />
+          <EntitySet Name="CoinsRates" EntityType="Self.CoinsRate" />
+          <EntitySet Name="DpdCities" EntityType="Self.DpdCity" />
+          <EntitySet Name="Rates" EntityType="Self.Rate" />
+          <EntitySet Name="Currencies" EntityType="Self.Currency" />
         </EntityContainer>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
     <edmx:Mappings>
       <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
-        <EntityContainerMapping StorageEntityContainer="Хранилище ModelContainer" CdmEntityContainer="Entities">
+        <EntityContainerMapping StorageEntityContainer="ModelStoreContainer" CdmEntityContainer="Entities">
           <EntitySetMapping Name="CoinsRates">
-            <EntityTypeMapping TypeName="Model.CoinsRates">
+            <EntityTypeMapping TypeName="Model.CoinsRate">
               <MappingFragment StoreEntitySet="CoinsRates">
                 <ScalarProperty Name="Id" ColumnName="Id" />
                 <ScalarProperty Name="Acronim" ColumnName="Acronim" />
@@ -156,7 +156,7 @@
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="DpdCities">
-            <EntityTypeMapping TypeName="Model.DpdCities">
+            <EntityTypeMapping TypeName="Model.DpdCity">
               <MappingFragment StoreEntitySet="DpdCities">
                 <ScalarProperty Name="cityId" ColumnName="cityId" />
                 <ScalarProperty Name="cityIdSpecified" ColumnName="cityIdSpecified" />
@@ -178,7 +178,7 @@
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="Rates">
-            <EntityTypeMapping TypeName="Model.Rates">
+            <EntityTypeMapping TypeName="Model.Rate">
               <MappingFragment StoreEntitySet="Rates">
                 <ScalarProperty Name="Id" ColumnName="Id" />
                 <ScalarProperty Name="Acronim" ColumnName="Acronim" />
@@ -190,7 +190,7 @@
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="Currencies">
-            <EntityTypeMapping TypeName="Model.Currencies">
+            <EntityTypeMapping TypeName="Model.Currency">
               <MappingFragment StoreEntitySet="Currencies">
                 <ScalarProperty Name="Id" ColumnName="Id" />
                 <ScalarProperty Name="Name" ColumnName="Name" />
@@ -213,10 +213,10 @@
     <Options>
       <DesignerInfoPropertySet>
         <DesignerProperty Name="ValidateOnBuild" Value="true" />
-        <DesignerProperty Name="EnablePluralization" Value="false" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
         <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
         <DesignerProperty Name="UseLegacyProvider" Value="false" />
-        <DesignerProperty Name="CodeGenerationStrategy" Value="Нет" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
       </DesignerInfoPropertySet>
     </Options>
     <!-- Diagram content (shape and connector positions) -->
