@@ -13,10 +13,10 @@ namespace ratesRatesParser.Services
 {
     public static class ParserService
     {
-        public static async Task<List<Rates>> GetMetalRates()
+        public static async Task<List<Rate>> GetMetalRates()
         {
             string site = "https://www.moex.com/ru/derivatives/commodity/gold/";
-            List<Rates> rates = new List<Rates>();
+            List<Rate> rates = new List<Rate>();
 
             var htmlCode = await LoadHtmlAsync(site);
             var matches = Regex.Matches(htmlCode, "(?<=>)([1-9]+.[\\d,]+)+|([\\d,])(?=<)");
@@ -27,7 +27,7 @@ namespace ratesRatesParser.Services
                 if (index == 8)
                 {
                     double price = item.Value.ParseToDoubleFormat();
-                    rates.Add(new Rates()
+                    rates.Add(new Rate()
                     {
                         Acronim = "XAU",
                         Sell = price,
@@ -39,7 +39,7 @@ namespace ratesRatesParser.Services
                 else if (index == 16)
                 {
                     double price = item.Value.ParseToDoubleFormat();
-                    rates.Add(new Rates()
+                    rates.Add(new Rate()
                     {
                         Acronim = "PAL",
                         Sell = price,
@@ -51,7 +51,7 @@ namespace ratesRatesParser.Services
                 else if (index == 23)
                 {
                     double price = item.Value.ParseToDoubleFormat();
-                    rates.Add(new Rates()
+                    rates.Add(new Rate()
                     {
                         Acronim = "PL",
                         Sell = price,
@@ -63,7 +63,7 @@ namespace ratesRatesParser.Services
                 else if (index == 30)
                 {
                     double price = item.Value.ParseToDoubleFormat();
-                    rates.Add(new Rates()
+                    rates.Add(new Rate()
                     {
                         Acronim = "XAG",
                         Sell = price,
@@ -79,11 +79,11 @@ namespace ratesRatesParser.Services
             return rates;
         }
 
-        public static async Task<List<Rates>> GetExchangeRates()
+        public static async Task<List<Rate>> GetExchangeRates()
         {
             DateTime parsingStartTime = DateTime.Now;
 
-            List<Rates> rates = new List<Rates>();
+            List<Rate> rates = new List<Rate>();
             using (WebClient client = new WebClient())
             {
                 client.Encoding = Encoding.UTF8;
@@ -105,7 +105,7 @@ namespace ratesRatesParser.Services
                     for (int i = 0; i < ratesMatches.Count; i++)
                     {
                         double price = ratesMatches[i].Value.ParseToDoubleFormat();
-                        rates.Add(new Rates()
+                        rates.Add(new Rate()
                         {
                             Acronim = codeOfRatesMatches[i].Value.Split()[3],
                             Sell = price,
@@ -119,7 +119,7 @@ namespace ratesRatesParser.Services
             return rates;
         }
 
-        public static async Task<List<CoinsRates>> GetCoinsRatesZolotoyZapas()
+        public static async Task<List<CoinsRate>> GetCoinsRatesZolotoyZapas()
         {
             var web = new HtmlWeb();
 
@@ -139,9 +139,9 @@ namespace ratesRatesParser.Services
 
             DateTime parseDate = DateTime.Now;
 
-            return new List<CoinsRates>
+            return new List<CoinsRate>
             {
-                new CoinsRates()
+                new CoinsRate()
                 {
                     Acronim = "GPM",
                     Sell = mmd[0],
@@ -149,7 +149,7 @@ namespace ratesRatesParser.Services
                     Date = parseDate,
                     Site = site
                 },
-                new CoinsRates()
+                new CoinsRate()
                 {
                     Acronim = "GPS",
                     Sell = spmd[0],
@@ -160,7 +160,7 @@ namespace ratesRatesParser.Services
             };
         }
 
-        public static async Task<List<CoinsRates>> GetCoinsRatesZolotoyClub()
+        public static async Task<List<CoinsRate>> GetCoinsRatesZolotoyClub()
         {
             var web = new HtmlWeb();
 
@@ -186,9 +186,9 @@ namespace ratesRatesParser.Services
 
             DateTime parseDate = DateTime.Now;
 
-            return new List<CoinsRates>
+            return new List<CoinsRate>
             {
-                new CoinsRates()
+                new CoinsRate()
                 {
                     Acronim = "GPM",
                     Sell = sellPriceMMD,
@@ -196,7 +196,7 @@ namespace ratesRatesParser.Services
                     Date = parseDate,
                     Site = site
                 },
-                new CoinsRates()
+                new CoinsRate()
                 {
                     Acronim = "GPS",
                     Sell = sellPriceSPMD,
@@ -207,7 +207,7 @@ namespace ratesRatesParser.Services
             };
         }
 
-        public static async Task<List<CoinsRates>> GetCoinsRatesZolotoMD()
+        public static async Task<List<CoinsRate>> GetCoinsRatesZolotoMD()
         {
             var web = new HtmlWeb();
 
@@ -231,9 +231,9 @@ namespace ratesRatesParser.Services
 
             DateTime parseDate = DateTime.Now;
 
-            return new List<CoinsRates>
+            return new List<CoinsRate>
             {
-                new CoinsRates()
+                new CoinsRate()
                 {
                     Acronim = "GPM",
                     Sell = sellPrices[2],
@@ -241,7 +241,7 @@ namespace ratesRatesParser.Services
                     Date = parseDate,
                     Site = site
                 },
-                new CoinsRates()
+                new CoinsRate()
                 {
                     Acronim = "GPS",
                     Sell = sellPrices[0],
@@ -252,9 +252,9 @@ namespace ratesRatesParser.Services
             };
         }
 
-        public static async Task<List<CoinsRates>> GetCoinsRatesMonetaInvest()
+        public static async Task<List<CoinsRate>> GetCoinsRatesMonetaInvest()
         {
-            List<CoinsRates> rates = new List<CoinsRates>();
+            List<CoinsRate> rates = new List<CoinsRate>();
             var web = new HtmlWeb();
 
             string site = "https://msk.monetainvest.ru/";
@@ -309,7 +309,7 @@ namespace ratesRatesParser.Services
             DateTime parseDate = DateTime.Now;
 
             rates.Add(
-                    new CoinsRates
+                    new CoinsRate
                     {
                         Acronim = "GPM",
                         Sell = saleCointMMD.ParseToDoubleFormat(),
@@ -319,7 +319,7 @@ namespace ratesRatesParser.Services
                     });
 
             rates.Add(
-                   new CoinsRates
+                   new CoinsRate
                    {
                        Acronim = "GPS",
                        Sell = saleCointSPMD.ParseToDoubleFormat(),
@@ -331,9 +331,9 @@ namespace ratesRatesParser.Services
             return rates;
         }
 
-        public static async Task<List<CoinsRates>> GetCoinsRatesVFBank()
+        public static async Task<List<CoinsRate>> GetCoinsRatesVFBank()
         {
-            List<CoinsRates> rates = new List<CoinsRates>();
+            List<CoinsRate> rates = new List<CoinsRate>();
             var web = new HtmlWeb();
 
             string site = "https://www.vfbank.ru/fizicheskim-licam/monety/";
@@ -388,7 +388,7 @@ namespace ratesRatesParser.Services
             DateTime parseDate = DateTime.Now;
 
             rates.Add(
-                    new CoinsRates
+                    new CoinsRate
                     {
                         Acronim = "GPM",
                         Sell = saleCointMMD.ParseToDoubleFormat(),
@@ -398,7 +398,7 @@ namespace ratesRatesParser.Services
                     });
 
             rates.Add(
-                   new CoinsRates
+                   new CoinsRate
                    {
                        Acronim = "GPS",
                        Sell = saleCointSPMD.ParseToDoubleFormat(),
@@ -411,9 +411,9 @@ namespace ratesRatesParser.Services
         }
 
 
-        public static async Task<List<CoinsRates>> GetCoinsRatesRshbRu()
+        public static async Task<List<CoinsRate>> GetCoinsRatesRshbRu()
         {
-            List<CoinsRates> coins = new List<CoinsRates>();
+            List<CoinsRate> coins = new List<CoinsRate>();
             
             var selectorGPM = "//a[@id='detailCoin_202657' and @class='b-coins-items-item-head-lnk']";
 
@@ -428,7 +428,7 @@ namespace ratesRatesParser.Services
 
 
 
-        static async Task<CoinsRates> getRshbRuCoin(string xpath,string acronim)
+        static async Task<CoinsRate> getRshbRuCoin(string xpath,string acronim)
         {
             var site = @"https://www.rshb.ru/natural/coins/";
 
@@ -451,7 +451,7 @@ namespace ratesRatesParser.Services
             string sellPrice = coinHtmlDoc.DocumentNode.SelectSingleNode(sellSelect).InnerText.Replace("Р", "");
 
 
-            CoinsRates coin = new CoinsRates()
+            CoinsRate coin = new CoinsRate()
             {
                 Acronim = acronim,
                 Date = DateTime.Now,
@@ -465,12 +465,12 @@ namespace ratesRatesParser.Services
         }
 
 
-        public static async Task<List<CoinsRates>> GetCoinsRatesRicgoldCom()
+        public static async Task<List<CoinsRate>> GetCoinsRatesRicgoldCom()
         {
             string urlMMD = @"https://www.ricgold.com/shop/investitsionnye-monety-6/zolotaya--moneta-georgij-pobedonosets-mmd-2006-2020-gg-388/";
             string urlSPMD = "https://www.ricgold.com/shop/investitsionnye-monety-6/zolotaya-moneta-georgij-pobedonosets-spmd-2006-2021-gg-1830/";
             
-            List<CoinsRates> coins = new List<CoinsRates>();
+            List<CoinsRate> coins = new List<CoinsRate>();
 
             coins.Add(await getCoinRateRicgoldCom(urlMMD, "GPM"));
             coins.Add(await getCoinRateRicgoldCom(urlSPMD, "GPS"));
@@ -478,7 +478,7 @@ namespace ratesRatesParser.Services
             return coins;
         }
 
-        static async Task<CoinsRates> getCoinRateRicgoldCom(string url,string acronim)
+        static async Task<CoinsRate> getCoinRateRicgoldCom(string url,string acronim)
         {
             string loadedHtml = await LoadHtmlAsync(url);
 
@@ -505,7 +505,7 @@ namespace ratesRatesParser.Services
                 }
             }
 
-            CoinsRates coin = new CoinsRates()
+            CoinsRate coin = new CoinsRate()
             {
                 Acronim = acronim,
                 Date = DateTime.Now,
@@ -553,9 +553,9 @@ namespace ratesRatesParser.Services
 
 
 
-        public static async Task<List<CoinsRates>> GetCoinsRates9999dRu()
+        public static async Task<List<CoinsRate>> GetCoinsRates9999dRu()
         {
-            List<CoinsRates> coins = new List<CoinsRates>();
+            List<CoinsRate> coins = new List<CoinsRate>();
 
             var nodesXPathMMD = "//div[@id='bx_651765591_51184']/div[@class='inner-wrap']/div[@class='text']";
 
@@ -568,7 +568,7 @@ namespace ratesRatesParser.Services
             return coins;
         }
 
-        static async Task<CoinsRates> parseCoin(string xpath, string acronim)
+        static async Task<CoinsRate> parseCoin(string xpath, string acronim)
         {
             var site = @"https://9999d.ru/";
 
@@ -594,7 +594,7 @@ namespace ratesRatesParser.Services
 
             pricePair = pricePair.Select(x => x.Replace("₽", "")).ToArray();
 
-            CoinsRates coin = new CoinsRates()
+            CoinsRate coin = new CoinsRate()
             {
                 Date = DateTime.Now,
                 Site = site,

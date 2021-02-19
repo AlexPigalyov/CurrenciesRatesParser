@@ -87,14 +87,14 @@
     <Compile Include="Jobs\ExchangeRatesParserJob.cs" />
     <Compile Include="Jobs\MetalRatesParserJob.cs" />
     <Compile Include="Mappers\ParseMapper.cs" />
-    <Compile Include="Model\CoinsRates.cs">
+    <Compile Include="Model\CoinsRate.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
     <Compile Include="Model\CoinsRatesDataHelper.cs" />
-    <Compile Include="Model\Currencies.cs">
+    <Compile Include="Model\Currency.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
-    <Compile Include="Model\DpdCities.cs">
+    <Compile Include="Model\DpdCity.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
     <Compile Include="Model\Model1.Context.cs">
@@ -112,7 +112,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Model1.edmx</DependentUpon>
     </Compile>
-    <Compile Include="Model\Rates.cs">
+    <Compile Include="Model\Rate.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
     <Compile Include="Model\RatesDataHelper.cs" />
