@@ -436,8 +436,8 @@ namespace ratesRatesParser.Services
             
             List<CoinsRates> coins = new List<CoinsRates>();
 
-            coins.Add(getCoinRateRicgoldCom(urlMMD, "MMD").Result);
-            coins.Add(getCoinRateRicgoldCom(urlSPMD, "SPDM").Result);
+            coins.Add(getCoinRateRicgoldCom(urlMMD, "GPM").Result);
+            coins.Add(getCoinRateRicgoldCom(urlSPMD, "GPS").Result);
 
             return coins;
         }
@@ -526,8 +526,8 @@ namespace ratesRatesParser.Services
             var nodesXPathSPDM = "//div[@id='bx_651765591_51290']/div[@class='inner-wrap']/div[@class='text']";
 
 
-            coins.Add(parseCoin(nodesXPathMMD, "MMD").Result);
-            coins.Add(parseCoin(nodesXPathSPDM, "SPDM").Result);
+            coins.Add(parseCoin(nodesXPathMMD, "GPM").Result);
+            coins.Add(parseCoin(nodesXPathSPDM, "GPS").Result);
 
             return coins;
         }
