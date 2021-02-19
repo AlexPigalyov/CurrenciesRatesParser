@@ -73,6 +73,7 @@ namespace ratesRatesParser.Services
                             Site = site
                         });
                     }
+                    else if (index > 30) break;
                     index++;
                 }
             }
@@ -328,7 +329,7 @@ namespace ratesRatesParser.Services
             rates.Add(
                     new CoinsRates
                     {
-                        Acronim = "MMD",
+                        Acronim = "GPM",
                         Sell = double.Parse(saleCointMMD),
                         Buy = double.Parse(buyCointMMD),
                         Date = parseDate,
@@ -338,7 +339,7 @@ namespace ratesRatesParser.Services
             rates.Add(
                    new CoinsRates
                    {
-                       Acronim = "SPMD",
+                       Acronim = "GPS",
                        Sell = double.Parse(saleCointSPMD),
                        Buy = double.Parse(buyCointSPMD),
                        Date = parseDate,
@@ -407,7 +408,7 @@ namespace ratesRatesParser.Services
             rates.Add(
                     new CoinsRates
                     {
-                        Acronim = "MMD",
+                        Acronim = "GPM",
                         Sell = double.Parse(saleCointMMD),
                         Buy = double.Parse(buyCointMMD),
                         Date = parseDate,
@@ -417,7 +418,7 @@ namespace ratesRatesParser.Services
             rates.Add(
                    new CoinsRates
                    {
-                       Acronim = "SPMD",
+                       Acronim = "GPS",
                        Sell = double.Parse(saleCointSPMD),
                        Buy = double.Parse(buyCointSPMD),
                        Date = parseDate,
