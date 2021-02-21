@@ -10,7 +10,7 @@ namespace CurrenciesRatesParser
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Service start. Time: {0}", DateTime.Now.ToString("HH:mm:ss"));
+           Console.WriteLine("Service start. Time: {0}", DateTime.Now.ToString("HH:mm:ss"));
 
             #region Exchange
             //EXCHANGE JOB

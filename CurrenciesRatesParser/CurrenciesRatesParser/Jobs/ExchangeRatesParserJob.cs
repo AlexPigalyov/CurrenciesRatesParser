@@ -11,7 +11,7 @@ namespace CurrenciesRatesParser.Jobs
     {
         public async Task Execute(IJobExecutionContext context)
         {
-            List<Rates> echangeRates = await ParserService.GetExchangeRates();
+            List<Rate> echangeRates = await ParserService.GetExchangeRates();
 
             RatesDataHelper.AddRatesRange(echangeRates);
 
