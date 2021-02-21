@@ -19,6 +19,7 @@ namespace CurrenciesRatesParser.Jobs
             Task<List<CoinsRate>> coinsRates9999dTask = ParserService.GetCoinsRates9999dRu();
             Task<List<CoinsRate>> coinsRatesRicGoldComTask = ParserService.GetCoinsRatesRicgoldCom();
             Task<List<CoinsRate>> coinsRatesRshbRuTask = ParserService.GetCoinsRatesRshbRu();
+            Task<List<CoinsRate>> coinsRatesSberbankTask = ParserService.GetCoinsRatesSberbank();
             
 
             await Task.WhenAll(
@@ -29,7 +30,8 @@ namespace CurrenciesRatesParser.Jobs
                 coinsRatesVFBankTask,
                 coinsRates9999dTask,
                 coinsRatesRicGoldComTask,
-                coinsRatesRshbRuTask);
+                coinsRatesRshbRuTask,
+                coinsRatesSberbankTask);
 
             List<CoinsRate> coinsRatesZolotoyZapas = await coinsRatesZolotoyZapasTask;
             List<CoinsRate> coinsRatesZolotoMD = await coinsRatesZolotoMDTask;
@@ -39,6 +41,7 @@ namespace CurrenciesRatesParser.Jobs
             List<CoinsRate> coinsRates9999d = await coinsRates9999dTask;
             List<CoinsRate> coinsRatesRicGoldCom = await coinsRatesRicGoldComTask;
             List<CoinsRate> coinsRatesRshbRu = await coinsRatesRshbRuTask;
+            List<CoinsRate> coinsRatesSberbank = await coinsRatesSberbankTask;
 
             CoinsRatesDataHelper.AddCoinsRatesRange(coinsRatesZolotoyZapas);
             Console.WriteLine("Coins rates zolotoy zapas saved. Time: {0}", DateTime.Now.ToString("HH:mm:ss"));
@@ -56,6 +59,8 @@ namespace CurrenciesRatesParser.Jobs
             Console.WriteLine("Coins rates ricgold.com saved. Time: {0}", DateTime.Now.ToString("HH:mm:ss"));
             CoinsRatesDataHelper.AddCoinsRatesRange(coinsRatesRshbRu);
             Console.WriteLine("Coins rates rshb.ru saved. Time: {0}", DateTime.Now.ToString("HH:mm:ss"));
+            CoinsRatesDataHelper.AddCoinsRatesRange(coinsRatesSberbank);
+            Console.WriteLine("Coins rates sberbank.ru saved. Time: {0}", DateTime.Now.ToString("HH:mm:ss"));
 
         }
     }
