@@ -5,12 +5,13 @@ namespace CurrenciesRatesParser.Model
 {
     public static class RatesDataHelper
     {
-        public static void AddRatesRange(List<Rates> rates)
+        public static void AddRatesRange(List<Rate> rates)
         {
             try
             {
                 using (var ctx = new Model.Entities())
                 {
+                    ctx.Database.Connection.Open();
                     ctx.Rates.AddRange(rates);
                     ctx.SaveChanges();
                 }
