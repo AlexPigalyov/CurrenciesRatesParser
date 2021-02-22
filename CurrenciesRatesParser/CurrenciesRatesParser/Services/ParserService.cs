@@ -1,6 +1,7 @@
 ﻿using CurrenciesRatesParser.Mappers;
 using CurrenciesRatesParser.Model;
 using HtmlAgilityPack;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,6 +14,34 @@ namespace ratesRatesParser.Services
 {
     public static class ParserService
     {
+        public static async Task<List<CoinsRate>> GetCoinsRatesSberbank()
+        {
+            List<CoinsRate> rates = new List<CoinsRate>();
+            string site = "https://www.sberbank.ru/proxy/services/coin-catalog/coins/5216-0060?region=38&condition=1";
+
+            using (WebClient client = new WebClient())
+            {
+
+                string json = await client.DownloadStringTaskAsync(site);
+
+                JObject o = JObject.Parse(json);
+                string priceBuy = (string)o["price"];
+                string priceSell = (string)o["priceBuy"];
+
+                rates.Add(
+                        new CoinsRate
+                        {
+                            Acronim = "GPS",
+                            Sell = priceSell.ParseToDoubleFormat(),
+                            Buy = priceBuy.ParseToDoubleFormat(),
+                            Date = DateTime.Now,
+                            Site = site
+                        });
+
+            }
+            return rates;
+        }
+
         public static async Task<List<Rate>> GetMetalRates()
         {
             string site = "https://www.moex.com/ru/derivatives/commodity/gold/";
