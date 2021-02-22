@@ -636,6 +636,83 @@ namespace ratesRatesParser.Services
             return coin;
         }
 
+
+        public static async Task<List<CoinsRate>> GetCoinsRatesLantaRu()
+        {
+            DateTime dateOfParse = DateTime.Now;
+
+            string site = "https://lanta.ru/metals/coins/zolotie-monety/";
+            var web = new HtmlWeb();
+
+            var htmlDoc = await web.LoadFromWebAsync(site);
+
+            var coins = htmlDoc.DocumentNode.SelectNodes("//div[@class='coinList-cont']").Where(x =>
+                x.InnerText.Contains("Георгий Победоносец"));
+
+            List<double> mmdPrices = new List<double>();
+            List<double> spmdPrices = new List<double>();
+
+            foreach (var coinHtml in coins)
+            {
+                if (coinHtml.InnerText.Contains("ММД"))
+                {
+                    mmdPrices = GetCoinPricesLantaRu(coinHtml);
+                }
+                else if (coinHtml.InnerText.Contains("СПМД"))
+                {
+                    spmdPrices = GetCoinPricesLantaRu(coinHtml);
+                }
+            }
+
+            return new List<CoinsRate>()
+            {
+                new CoinsRate()
+                {
+                    Acronim = "GPM",
+                    Buy = mmdPrices[1],
+                    Sell = mmdPrices[0],
+                    Date = dateOfParse,
+                    Site = site
+                },
+                new CoinsRate()
+                {
+                    Acronim = "GPS",
+                    Buy = spmdPrices[1],
+                    Sell = spmdPrices[0],
+                    Date = dateOfParse,
+                    Site = site
+                }
+            };
+        }
+
+        private static List<double> GetCoinPricesLantaRu(HtmlNode coinHtml)
+        {
+            List<double> coinPrices = new List<double>();
+
+            var localPrices = coinHtml.ChildNodes
+                .Where(x => x.Name != "#text")
+                .FirstOrDefault(x => x.Attributes["class"].Value == "coinList-price").InnerText
+                .Split('\n')
+                .Where(s => !string.IsNullOrWhiteSpace(s))
+                .ToList();
+
+            foreach (var priceString in localPrices)
+            {
+                try
+                {
+                    var price = priceString.Replace("₽", "").Replace("покупка", "").ParseToDoubleFormat();
+
+                    coinPrices.Add(price);
+                }
+                catch
+                {
+                    coinPrices.Add(0);
+                }
+            }
+
+
+            return coinPrices;
+        }
         public static string GetBetweenTwoWords(string firstWord, string secondWord, string str)
         {
             var firstWordIndex = str.IndexOf(firstWord) + firstWord.Length;

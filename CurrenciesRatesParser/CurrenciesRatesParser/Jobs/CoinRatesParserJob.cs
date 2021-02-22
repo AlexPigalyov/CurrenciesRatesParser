@@ -20,6 +20,7 @@ namespace CurrenciesRatesParser.Jobs
             Task<List<CoinsRate>> coinsRatesRicGoldComTask = ParserService.GetCoinsRatesRicgoldCom();
             Task<List<CoinsRate>> coinsRatesRshbRuTask = ParserService.GetCoinsRatesRshbRu();
             Task<List<CoinsRate>> coinsRatesSberbankTask = ParserService.GetCoinsRatesSberbank();
+            Task<List<CoinsRate>> coinsRatesLantaRuTask = ParserService.GetCoinsRatesLantaRu();
             
 
             await Task.WhenAll(
@@ -31,7 +32,9 @@ namespace CurrenciesRatesParser.Jobs
                 coinsRates9999dTask,
                 coinsRatesRicGoldComTask,
                 coinsRatesRshbRuTask,
-                coinsRatesSberbankTask);
+                coinsRatesSberbankTask,
+                coinsRatesLantaRuTask
+                );
 
             List<CoinsRate> coinsRatesZolotoyZapas = await coinsRatesZolotoyZapasTask;
             List<CoinsRate> coinsRatesZolotoMD = await coinsRatesZolotoMDTask;
@@ -42,6 +45,7 @@ namespace CurrenciesRatesParser.Jobs
             List<CoinsRate> coinsRatesRicGoldCom = await coinsRatesRicGoldComTask;
             List<CoinsRate> coinsRatesRshbRu = await coinsRatesRshbRuTask;
             List<CoinsRate> coinsRatesSberbank = await coinsRatesSberbankTask;
+            List<CoinsRate> coinsRatesLantaRu = await coinsRatesLantaRuTask;
 
             CoinsRatesDataHelper.AddCoinsRatesRange(coinsRatesZolotoyZapas);
             Console.WriteLine("Coins rates zolotoy zapas saved. Time: {0}", DateTime.Now.ToString("HH:mm:ss"));
@@ -61,6 +65,8 @@ namespace CurrenciesRatesParser.Jobs
             Console.WriteLine("Coins rates rshb.ru saved. Time: {0}", DateTime.Now.ToString("HH:mm:ss"));
             CoinsRatesDataHelper.AddCoinsRatesRange(coinsRatesSberbank);
             Console.WriteLine("Coins rates sberbank.ru saved. Time: {0}", DateTime.Now.ToString("HH:mm:ss"));
+            CoinsRatesDataHelper.AddCoinsRatesRange(coinsRatesLantaRu);
+            Console.WriteLine("Coins rates Lanta.ru saved. Time: {0}", DateTime.Now.ToString("HH:mm:ss"));
 
         }
     }
