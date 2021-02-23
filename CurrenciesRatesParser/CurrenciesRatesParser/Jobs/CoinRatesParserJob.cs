@@ -21,6 +21,8 @@ namespace CurrenciesRatesParser.Jobs
             Task<List<CoinsRate>> coinsRatesRshbRuTask = ParserService.GetCoinsRatesRshbRu();
             Task<List<CoinsRate>> coinsRatesSberbankTask = ParserService.GetCoinsRatesSberbank();
             Task<List<CoinsRate>> coinsRatesLantaRuTask = ParserService.GetCoinsRatesLantaRu();
+            Task<List<CoinsRate>> coinsRatesTsbnkTask = ParserService.GetCoinsRateTsBnk();
+            Task<List<CoinsRate>> coinsRatesZolotoidvorTask = ParserService.GetCoinsRatesZolotoyDvor();
             
 
             await Task.WhenAll(
@@ -33,8 +35,9 @@ namespace CurrenciesRatesParser.Jobs
                 coinsRatesRicGoldComTask,
                 coinsRatesRshbRuTask,
                 coinsRatesSberbankTask,
-                coinsRatesLantaRuTask
-                );
+                coinsRatesLantaRuTask,
+                coinsRatesTsbnkTask,
+                coinsRatesZolotoidvorTask);
 
             List<CoinsRate> coinsRatesZolotoyZapas = await coinsRatesZolotoyZapasTask;
             List<CoinsRate> coinsRatesZolotoMD = await coinsRatesZolotoMDTask;
@@ -46,6 +49,9 @@ namespace CurrenciesRatesParser.Jobs
             List<CoinsRate> coinsRatesRshbRu = await coinsRatesRshbRuTask;
             List<CoinsRate> coinsRatesSberbank = await coinsRatesSberbankTask;
             List<CoinsRate> coinsRatesLantaRu = await coinsRatesLantaRuTask;
+            List<CoinsRate> coinsRatesTsbnk = await coinsRatesTsbnkTask;
+            List<CoinsRate> coinsRatesZolotoidvor = await coinsRatesZolotoidvorTask;
+
 
             CoinsRatesDataHelper.AddCoinsRatesRange(coinsRatesZolotoyZapas);
             Console.WriteLine("Coins rates zolotoy zapas saved. Time: {0}", DateTime.Now.ToString("HH:mm:ss"));
@@ -67,7 +73,10 @@ namespace CurrenciesRatesParser.Jobs
             Console.WriteLine("Coins rates sberbank.ru saved. Time: {0}", DateTime.Now.ToString("HH:mm:ss"));
             CoinsRatesDataHelper.AddCoinsRatesRange(coinsRatesLantaRu);
             Console.WriteLine("Coins rates Lanta.ru saved. Time: {0}", DateTime.Now.ToString("HH:mm:ss"));
-
+            CoinsRatesDataHelper.AddCoinsRatesRange(coinsRatesTsbnk);
+            Console.WriteLine("Coins rates TsBnk saved. Time: {0}", DateTime.Now.ToString("HH:mm:ss"));
+            CoinsRatesDataHelper.AddCoinsRatesRange(coinsRatesZolotoidvor);
+            Console.WriteLine("Coins rates ZolotoiDvor saved. Time: {0}", DateTime.Now.ToString("HH:mm:ss"));
         }
     }
 }
