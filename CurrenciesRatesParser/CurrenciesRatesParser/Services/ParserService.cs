@@ -720,6 +720,44 @@ namespace ratesRatesParser.Services
             return str.Substring(firstWordIndex, secondWordIndex - firstWordIndex);
         }
 
+        public static async Task<List<CoinsRate>> GetCoinsRateTsBnk()
+        {
+            DateTime parseDate = DateTime.Now;
+            string urlSPMD = @"https://coins.tsbnk.ru/katalog/rossiyskie/investitsionnaya-rossiyskaya-moneta-georgiy-pobedonosets-spmd-50-rub-2018-2019-gg-zoloto-7-78-gr-spm/";
+            string urlMMD = "https://coins.tsbnk.ru/katalog/rossiyskie/investitsionnaya-rossiyskaya-moneta-2018-georgiy-pobedonosets-mmd-50-rub-2018-g-v-zoloto-7-78-gr-mmd/";
 
+            var web = new HtmlWeb();
+
+            var htmlDocSPMD = await web.LoadFromWebAsync(urlSPMD);
+            var htmlDocMMD = await web.LoadFromWebAsync(urlMMD);
+
+
+            var SPMDBuy = htmlDocSPMD.DocumentNode.SelectNodes("//div[@class='product-price']/div[@class='price aligner']/span[@itemprop='price']").First().InnerText.Replace("руб.", "").ParseToDoubleFormat();
+            var SPMDSell = htmlDocSPMD.DocumentNode.SelectNodes("//div[@class='product-action']/div[@class='redemption-price']/p/span[@class='r-price']").First().InnerText.Replace("руб.", "").ParseToDoubleFormat();
+
+            var MMDByu = htmlDocMMD.DocumentNode.SelectNodes("//div[@class='product-price']/div[@class='price aligner']/span[@itemprop='price']").First().InnerText.Replace("руб.", "").ParseToDoubleFormat();
+            var MMDSell = htmlDocMMD.DocumentNode.SelectNodes("//div[@class='product-action']/div[@class='redemption-price']/p/span[@class='r-price']").First().InnerText.Replace("руб.", "").ParseToDoubleFormat();
+
+            return new List<CoinsRate>()
+            {
+                new CoinsRate()
+                {
+                    Acronim = "GPM",
+                    Sell = MMDSell,
+                    Buy = MMDByu,
+                    Date = parseDate,
+                    Site = urlMMD
+                },
+                new CoinsRate()
+                {
+                    Acronim = "GPS",
+                    Sell = SPMDSell,
+                    Buy = SPMDBuy,
+                    Date = parseDate,
+                    Site = urlSPMD
+                }
+            };
+
+        }
     }
 }
