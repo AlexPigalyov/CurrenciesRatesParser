@@ -688,7 +688,7 @@ namespace ratesRatesParser.Services
 
             var localPrices = coinHtml.ChildNodes
                 .Where(x => x.Name != "#text")
-                .FirstOrDefault(x => x.Attributes["class"].Value == "coinList-price").InnerText
+                .FirstOrDefault(x => x.Attributes["class"].Value == "coinList-price" || x.Attributes["class"].Value == "coinList-price out").InnerText
                 .Split('\n')
                 .Where(s => !string.IsNullOrWhiteSpace(s))
                 .ToList();
