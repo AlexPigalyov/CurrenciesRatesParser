@@ -446,7 +446,6 @@ namespace ratesRatesParser.Services
             return rates;
         }
 
-
         public static async Task<List<CoinsRate>> GetCoinsRatesRshbRu()
         {
             List<CoinsRate> coins = new List<CoinsRate>();
@@ -458,11 +457,8 @@ namespace ratesRatesParser.Services
             coins.Add(await getRshbRuCoin(selectorGPM, "GPM"));
             coins.Add(await getRshbRuCoin(selectorGPS, "GPS"));
 
-
             return coins;
         }
-
-
 
         static async Task<CoinsRate> getRshbRuCoin(string xpath, string acronim)
         {
@@ -479,13 +475,11 @@ namespace ratesRatesParser.Services
             var coinHtmlDoc = new HtmlDocument();
             coinHtmlDoc.LoadHtml("<div>" + coinNode.InnerHtml + "</div>");
 
-
             string buySelect = "//span[@class='b-coins-items-item-cost-b']";
             string sellSelect = "//div[@class='b-coins-items-item-quotes-price  ']";
 
             string buyPrice = coinHtmlDoc.DocumentNode.SelectSingleNode(buySelect).InnerText.Replace("Р", "");
             string sellPrice = coinHtmlDoc.DocumentNode.SelectSingleNode(sellSelect).InnerText.Replace("Р", "");
-
 
             CoinsRate coin = new CoinsRate()
             {
@@ -499,7 +493,6 @@ namespace ratesRatesParser.Services
 
             return coin;
         }
-
 
         public static async Task<List<CoinsRate>> GetCoinsRatesRicgoldCom()
         {
@@ -569,7 +562,6 @@ namespace ratesRatesParser.Services
                 {
                     coin.Buy = 0;
                 }
-
             }
             else
             {
@@ -579,7 +571,6 @@ namespace ratesRatesParser.Services
 
             return coin;
         }
-
 
         static async Task<string> LoadHtmlAsync(string url)
         {
@@ -591,8 +582,6 @@ namespace ratesRatesParser.Services
             }
         }
 
-
-
         public static async Task<List<CoinsRate>> GetCoinsRates9999dRu()
         {
             List<CoinsRate> coins = new List<CoinsRate>();
@@ -600,7 +589,6 @@ namespace ratesRatesParser.Services
             var nodesXPathMMD = "//div[@id='bx_651765591_51184']/div[@class='inner-wrap']/div[@class='text']";
 
             var nodesXPathSPDM = "//div[@id='bx_651765591_51290']/div[@class='inner-wrap']/div[@class='text']";
-
 
             coins.Add(await parseCoin(nodesXPathMMD, "GPM"));
             coins.Add(await parseCoin(nodesXPathSPDM, "GPS"));
@@ -619,7 +607,6 @@ namespace ratesRatesParser.Services
             var selector = "//div[@class='catalog item-views table catalog_table_2' and @data-slice='Y']";
 
             var node = htmlDoc.DocumentNode.SelectSingleNode(selector);
-
 
             var htmlDoc2 = new HtmlDocument();
             htmlDoc2.LoadHtml("<div>" + node.InnerHtml + "</div>");
@@ -646,7 +633,6 @@ namespace ratesRatesParser.Services
 
             return coin;
         }
-
 
         public static async Task<List<CoinsRate>> GetCoinsRatesLantaRu()
         {
@@ -702,7 +688,7 @@ namespace ratesRatesParser.Services
 
             var localPrices = coinHtml.ChildNodes
                 .Where(x => x.Name != "#text")
-                .FirstOrDefault(x => x.Attributes["class"].Value == "coinList-price").InnerText
+                .FirstOrDefault(x => x.Attributes["class"].Value == "coinList-price" || x.Attributes["class"].Value == "coinList-price out").InnerText
                 .Split('\n')
                 .Where(s => !string.IsNullOrWhiteSpace(s))
                 .ToList();
@@ -720,7 +706,6 @@ namespace ratesRatesParser.Services
                     coinPrices.Add(0);
                 }
             }
-
 
             return coinPrices;
         }
@@ -744,7 +729,6 @@ namespace ratesRatesParser.Services
 
             var htmlDocSPMD = await web.LoadFromWebAsync(urlSPMD);
             var htmlDocMMD = await web.LoadFromWebAsync(urlMMD);
-
 
             var SPMDBuy = htmlDocSPMD.DocumentNode
                 .SelectNodes("//div[@class='product-price']/div[@class='price aligner']/span[@itemprop='price']")
@@ -779,11 +763,7 @@ namespace ratesRatesParser.Services
                     Site = urlSPMD
                 }
             };
-
         }
-
-
-
 
         public static async Task<List<CoinsRate>> GetCoinsRatesZolotoyDvor()
         {
