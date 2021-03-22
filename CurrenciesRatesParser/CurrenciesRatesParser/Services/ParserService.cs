@@ -25,8 +25,18 @@ namespace ratesRatesParser.Services
                 string json = await client.DownloadStringTaskAsync(site);
 
                 JObject o = JObject.Parse(json);
-                string priceBuy = (string)o["price"];
-                string priceSell = (string)o["priceBuy"];
+                string priceBuy = (string)o["priceBuy"];
+                string priceSell = (string)o["price"];
+
+                rates.Add(
+                    new CoinsRate
+                    {
+                        Acronim = "GPM",
+                        Sell = priceSell.ParseToDoubleFormat(),
+                        Buy = priceBuy.ParseToDoubleFormat(),
+                        Date = DateTime.Now,
+                        Site = site
+                    });
 
                 rates.Add(
                     new CoinsRate
@@ -37,7 +47,6 @@ namespace ratesRatesParser.Services
                         Date = DateTime.Now,
                         Site = site
                     });
-
             }
 
             return rates;
