@@ -739,17 +739,17 @@ namespace ratesRatesParser.Services
             var htmlDocSPMD = await web.LoadFromWebAsync(urlSPMD);
             var htmlDocMMD = await web.LoadFromWebAsync(urlMMD);
 
-            var SPMDBuy = htmlDocSPMD.DocumentNode
+            var SPMDSell = htmlDocSPMD.DocumentNode
                 .SelectNodes("//div[@class='product-price']/div[@class='price aligner']/span[@itemprop='price']")
                 .First().InnerText.Replace("руб.", "").ParseToDoubleFormat();
-            var SPMDSell = htmlDocSPMD.DocumentNode
+            var SPMDBuy = htmlDocSPMD.DocumentNode
                 .SelectNodes("//div[@class='product-action']/div[@class='redemption-price']/p/span[@class='r-price']")
                 .First().InnerText.Replace("руб.", "").ParseToDoubleFormat();
 
-            var MMDByu = htmlDocMMD.DocumentNode
+            var MMDSell = htmlDocMMD.DocumentNode
                 .SelectNodes("//div[@class='product-price']/div[@class='price aligner']/span[@itemprop='price']")
                 .First().InnerText.Replace("руб.", "").ParseToDoubleFormat();
-            var MMDSell = htmlDocMMD.DocumentNode
+            var MMDByu = htmlDocMMD.DocumentNode
                 .SelectNodes("//div[@class='product-action']/div[@class='redemption-price']/p/span[@class='r-price']")
                 .First().InnerText.Replace("руб.", "").ParseToDoubleFormat();
 
