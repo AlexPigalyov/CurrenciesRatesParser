@@ -52,7 +52,6 @@ namespace CurrenciesRatesParser.Jobs
             List<CoinsRate> coinsRatesTsbnk = await coinsRatesTsbnkTask;
             List<CoinsRate> coinsRatesZolotoidvor = await coinsRatesZolotoidvorTask;
 
-
             CoinsRatesDataHelper.AddCoinsRatesRange(coinsRatesZolotoyZapas);
             Console.WriteLine("Coins rates zolotoy zapas saved. Time: {0}", DateTime.Now.ToString("HH:mm:ss"));
             CoinsRatesDataHelper.AddCoinsRatesRange(coinsRatesZolotoMD);
