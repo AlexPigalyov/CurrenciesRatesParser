@@ -83,6 +83,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Helpers\UrlParseHelper.cs" />
     <Compile Include="Jobs\CoinRatesParserJob.cs" />
     <Compile Include="Jobs\ExchangeRatesParserJob.cs" />
     <Compile Include="Jobs\MetalRatesParserJob.cs" />
