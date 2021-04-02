@@ -20,5 +20,6 @@ namespace CurrenciesRatesParser.Model
         public double Sell { get; set; }
         public double Buy { get; set; }
         public System.DateTime Date { get; set; }
+        public bool IsUp { get; set; }
     }
 }
