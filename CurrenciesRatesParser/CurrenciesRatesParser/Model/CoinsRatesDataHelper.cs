@@ -16,7 +16,7 @@ namespace CurrenciesRatesParser.Model
 
                     rates.ForEach(x =>
                     {
-                        x.IsUp = ctx.CoinsRates.ToList().LastOrDefault(g => g.Site == x.Site).Buy <= x.Buy;
+                        x.IsUp = ctx.CoinsRates.OrderByDescending(r => r.Date).FirstOrDefault(g => g.Site == x.Site && g.Acronim == x.Acronim).Sell <= x.Sell;
                     });
 
                     ctx.CoinsRates.AddRange(rates);
