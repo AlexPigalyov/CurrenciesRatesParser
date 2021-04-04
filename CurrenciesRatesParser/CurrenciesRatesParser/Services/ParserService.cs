@@ -161,23 +161,27 @@ namespace ratesRatesParser.Services
 
         public static async Task<List<CoinsRate>> GetCoinsRatesZolotoyZapas()
         {
-            var web = new HtmlWeb();
+            try
+            {
+                var web = new HtmlWeb();
 
-            var doc = await web.LoadFromWebAsync(UrlParseHelper.ZolotoyZapas);
+                var doc = await web.LoadFromWebAsync(UrlParseHelper.ZolotoyZapas);
 
-            List<double> prices = doc.DocumentNode
-                .SelectNodes("//div[@class='coins-tile__price-val js-only-currency-rur']").ToList()
-                .Take(4)
-                .Select(x =>
-                    x.InnerText.ParseToDoubleFormat())
-                .ToList();
+                List<double> prices = doc.DocumentNode
+                    .SelectNodes("//div[@class='coins-tile__price-val js-only-currency-rur']").ToList()
+                    .Take(4)
+                    .Select(x =>
+                        x.InnerText.ParseToDoubleFormat())
+                    .ToList();
 
-            var mmd = prices.Take(2).ToList();
-            var spmd = prices.Skip(2).ToList();
+                var mmd = prices.Take(2).ToList();
+                var spmd = prices.Skip(2).ToList();
 
-            DateTime parseDate = DateTime.Now;
+                DateTime parseDate = DateTime.Now;
 
-            return new List<CoinsRate>
+                Console.WriteLine("Parse coins rates zolotoy zapas OK. Time: {0}.", DateTime.Now.ToString("HH:mm:ss"));
+
+                return new List<CoinsRate>
             {
                 new CoinsRate()
                 {
@@ -196,6 +200,13 @@ namespace ratesRatesParser.Services
                     Site = UrlParseHelper.ZolotoyZapas
                 }
             };
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("Error parse coins rates zolotoy zapas. Time: {0}. Error: {1}.", DateTime.Now.ToString("HH:mm:ss"), e.Message);
+
+                return null;
+            }
         }
 
         public static async Task<List<CoinsRate>> GetCoinsRatesZolotoyClub()
