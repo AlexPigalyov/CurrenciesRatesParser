@@ -12,14 +12,13 @@ namespace CurrenciesRatesParser.Model
     using System;
     using System.Collections.Generic;
     
-    public partial class Rate
+    public partial class AspNetRoleClaim
     {
-        public long Id { get; set; }
-        public string Acronim { get; set; }
-        public string Site { get; set; }
-        public double Buy { get; set; }
-        public double Sell { get; set; }
-        public System.DateTime Date { get; set; }
-        public bool IsUp { get; set; }
+        public int Id { get; set; }
+        public string RoleId { get; set; }
+        public string ClaimType { get; set; }
+        public string ClaimValue { get; set; }
+    
+        public virtual AspNetRole AspNetRole { get; set; }
     }
 }

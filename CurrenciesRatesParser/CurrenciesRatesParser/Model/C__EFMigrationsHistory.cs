@@ -12,14 +12,9 @@ namespace CurrenciesRatesParser.Model
     using System;
     using System.Collections.Generic;
     
-    public partial class Rate
+    public partial class C__EFMigrationsHistory
     {
-        public long Id { get; set; }
-        public string Acronim { get; set; }
-        public string Site { get; set; }
-        public double Buy { get; set; }
-        public double Sell { get; set; }
-        public System.DateTime Date { get; set; }
-        public bool IsUp { get; set; }
+        public string MigrationId { get; set; }
+        public string ProductVersion { get; set; }
     }
 }

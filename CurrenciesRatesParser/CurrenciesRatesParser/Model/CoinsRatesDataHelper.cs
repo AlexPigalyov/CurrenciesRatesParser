@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace CurrenciesRatesParser.Model
 {
@@ -12,6 +13,12 @@ namespace CurrenciesRatesParser.Model
                 using (var ctx = new Model.Entities())
                 {
                     ctx.Database.Connection.Open();
+
+                    rates.ForEach(x =>
+                    {
+                        x.IsUp = ctx.CoinsRates.OrderByDescending(r => r.Date).FirstOrDefault(g => g.Site == x.Site && g.Acronim == x.Acronim).Sell <= x.Sell;
+                    });
+
                     ctx.CoinsRates.AddRange(rates);
                     ctx.SaveChanges();
                 }
