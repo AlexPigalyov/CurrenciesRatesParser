@@ -16,7 +16,19 @@ namespace CurrenciesRatesParser.Model
 
                     rates.ForEach(x =>
                     {
-                        x.IsUp = ctx.Rates.OrderByDescending(r => r.Date).FirstOrDefault(g => g.Site == x.Site && g.Acronim == x.Acronim).Buy <= x.Buy;
+                        var lastItemValue = ctx.Rates.OrderByDescending(r => r.Date).FirstOrDefault(g => g.Site == x.Site && g.Acronim == x.Acronim).Buy;
+                        if (x.Sell > lastItemValue)
+                        {
+                            x.IsUp = true;
+                        }
+                        else if (x.Sell < lastItemValue)
+                        {
+                            x.IsUp = false;
+                        }
+                        else if (x.Sell == lastItemValue)
+                        {
+                            x.IsUp = null;
+                        }
                     });
 
                     ctx.Rates.AddRange(rates);
