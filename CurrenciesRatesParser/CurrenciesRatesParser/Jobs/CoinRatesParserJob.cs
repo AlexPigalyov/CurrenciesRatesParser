@@ -3,6 +3,7 @@ using Quartz;
 using ratesRatesParser.Services;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace CurrenciesRatesParser.Jobs
@@ -23,7 +24,7 @@ namespace CurrenciesRatesParser.Jobs
             Task<List<CoinsRate>> coinsRatesLantaRuTask = ParserService.GetCoinsRatesLantaRu();
             Task<List<CoinsRate>> coinsRatesTsbnkTask = ParserService.GetCoinsRateTsBnk();
             Task<List<CoinsRate>> coinsRatesZolotoidvorTask = ParserService.GetCoinsRatesZolotoyDvor();
-            
+
 
             await Task.WhenAll(
                 coinsRatesZolotoyZapasTask,
@@ -76,6 +77,19 @@ namespace CurrenciesRatesParser.Jobs
             Console.WriteLine("Coins rates TsBnk saved. Time: {0}", DateTime.Now.ToString("HH:mm:ss"));
             CoinsRatesDataHelper.AddCoinsRatesRange(coinsRatesZolotoidvor);
             Console.WriteLine("Coins rates ZolotoiDvor saved. Time: {0}", DateTime.Now.ToString("HH:mm:ss"));
+
+            // Save to GoldTech DataBase Georgiy Pobedonosec gold coin price 
+            // id = 46
+            try
+            {
+                decimal gpmPrice = Convert.ToDecimal(coinsRatesZolotoyZapas.FirstOrDefault(x => x.Acronim == "GPM").Sell - 100);
+                GoldTechDataHelper.UpdateCoinPrice(46, gpmPrice);
+                Console.WriteLine("Save to goldTech price Georgiy Pobedonosec OK.");
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("Save to goldTech price Georgiy Pobedonosec ERROR.{0}", e.Message);
+            }
         }
     }
 }

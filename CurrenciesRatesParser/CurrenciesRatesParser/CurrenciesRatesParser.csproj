@@ -119,6 +119,7 @@
     <Compile Include="Model\DpdCity.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
+    <Compile Include="Model\GoldTechDataHelper.cs" />
     <Compile Include="Model\Model1.Context.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -133,6 +134,24 @@
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Model1.edmx</DependentUpon>
+    </Compile>
+    <Compile Include="Model\ModelGoldTech.Context.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ModelGoldTech.Context.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\ModelGoldTech.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ModelGoldTech.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\ModelGoldTech.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ModelGoldTech.edmx</DependentUpon>
+    </Compile>
+    <Compile Include="Model\Product.cs">
+      <DependentUpon>ModelGoldTech.tt</DependentUpon>
     </Compile>
     <Compile Include="Model\Rate.cs">
       <DependentUpon>Model1.tt</DependentUpon>
@@ -160,6 +179,13 @@
     <None Include="Model\Model1.edmx.diagram">
       <DependentUpon>Model1.edmx</DependentUpon>
     </None>
+    <EntityDeploy Include="Model\ModelGoldTech.edmx">
+      <Generator>EntityModelCodeGenerator</Generator>
+      <LastGenOutput>ModelGoldTech.Designer.cs</LastGenOutput>
+    </EntityDeploy>
+    <None Include="Model\ModelGoldTech.edmx.diagram">
+      <DependentUpon>ModelGoldTech.edmx</DependentUpon>
+    </None>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
@@ -175,6 +201,16 @@
       <Generator>TextTemplatingFileGenerator</Generator>
       <DependentUpon>Model1.edmx</DependentUpon>
       <LastGenOutput>Model1.cs</LastGenOutput>
+    </Content>
+    <Content Include="Model\ModelGoldTech.Context.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>ModelGoldTech.edmx</DependentUpon>
+      <LastGenOutput>ModelGoldTech.Context.cs</LastGenOutput>
+    </Content>
+    <Content Include="Model\ModelGoldTech.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>ModelGoldTech.edmx</DependentUpon>
+      <LastGenOutput>ModelGoldTech.cs</LastGenOutput>
     </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
