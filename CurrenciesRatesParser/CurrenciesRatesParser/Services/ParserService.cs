@@ -636,7 +636,7 @@ namespace ratesRatesParser.Services
             {
                 Acronim = acronim,
                 Date = DateTime.Now,
-                Site = url
+                Site = UrlParseHelper.RicGold
             };
 
             if (whiteCount > 1)
