@@ -579,8 +579,25 @@ namespace ratesRatesParser.Services
             string buySelect = "//span[@class='b-coins-items-item-cost-b']";
             string sellSelect = "//div[@class='b-coins-items-item-quotes-price  ']";
 
-            string buyPrice = coinHtmlDoc.DocumentNode.SelectSingleNode(buySelect).InnerText.Replace("Р", "");
-            string sellPrice = coinHtmlDoc.DocumentNode.SelectSingleNode(sellSelect).InnerText.Replace("Р", "");
+            string buyPrice = "0";
+            try
+            {
+                buyPrice = coinHtmlDoc.DocumentNode.SelectSingleNode(buySelect).InnerText.Replace("Р", "");
+            }
+            catch (Exception e)
+            {
+                buyPrice = "0";
+            }
+            string sellPrice = "0";
+            try
+            {
+                sellPrice = coinHtmlDoc.DocumentNode.SelectSingleNode(sellSelect).InnerText.Replace("Р", "");
+
+            }
+            catch (Exception e)
+            {
+                sellPrice = "0";
+            }
 
             CoinsRate coin = new CoinsRate()
             {
