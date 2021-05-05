@@ -5,11 +5,14 @@ using HtmlAgilityPack;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using OpenQA.Selenium;
+using OpenQA.Selenium.Chrome;
 
 namespace ratesRatesParser.Services
 {
@@ -26,8 +29,8 @@ namespace ratesRatesParser.Services
                     string json = await client.DownloadStringTaskAsync(UrlParseHelper.Sberbank);
 
                     JObject o = JObject.Parse(json);
-                    string priceBuy = (string)o["priceBuy"];
-                    string priceSell = (string)o["price"];
+                    string priceBuy = (string) o["priceBuy"];
+                    string priceSell = (string) o["price"];
                     DateTime parseDate = DateTime.Now;
 
                     rates.Add(
@@ -135,7 +138,8 @@ namespace ratesRatesParser.Services
             }
             catch (Exception e)
             {
-                Console.WriteLine("Error parse metal rates. Time: {0}. Error: {1}.", DateTime.Now.ToString("HH:mm:ss"), e.Message);
+                Console.WriteLine("Error parse metal rates. Time: {0}. Error: {1}.", DateTime.Now.ToString("HH:mm:ss"),
+                    e.Message);
 
                 return null;
             }
@@ -188,7 +192,8 @@ namespace ratesRatesParser.Services
             }
             catch (Exception e)
             {
-                Console.WriteLine("Error parse exchange rates. Time: {0}. Error: {1}.", DateTime.Now.ToString("HH:mm:ss"), e.Message);
+                Console.WriteLine("Error parse exchange rates. Time: {0}. Error: {1}.",
+                    DateTime.Now.ToString("HH:mm:ss"), e.Message);
 
                 return null;
             }
@@ -217,28 +222,29 @@ namespace ratesRatesParser.Services
                 Console.WriteLine("Parse coins rates zolotoy zapas OK. Time: {0}.", DateTime.Now.ToString("HH:mm:ss"));
 
                 return new List<CoinsRate>
-            {
-                new CoinsRate()
                 {
-                    Acronim = "GPM",
-                    Sell = mmd[0],
-                    Buy = mmd[1],
-                    Date = parseDate,
-                    Site = UrlParseHelper.ZolotoyZapas
-                },
-                new CoinsRate()
-                {
-                    Acronim = "GPS",
-                    Sell = spmd[0],
-                    Buy = spmd[1],
-                    Date = parseDate,
-                    Site = UrlParseHelper.ZolotoyZapas
-                }
-            };
+                    new CoinsRate()
+                    {
+                        Acronim = "GPM",
+                        Sell = mmd[0],
+                        Buy = mmd[1],
+                        Date = parseDate,
+                        Site = UrlParseHelper.ZolotoyZapas
+                    },
+                    new CoinsRate()
+                    {
+                        Acronim = "GPS",
+                        Sell = spmd[0],
+                        Buy = spmd[1],
+                        Date = parseDate,
+                        Site = UrlParseHelper.ZolotoyZapas
+                    }
+                };
             }
             catch (Exception e)
             {
-                Console.WriteLine("Error parse coins rates zolotoy zapas. Time: {0}. Error: {1}.", DateTime.Now.ToString("HH:mm:ss"), e.Message);
+                Console.WriteLine("Error parse coins rates zolotoy zapas. Time: {0}. Error: {1}.",
+                    DateTime.Now.ToString("HH:mm:ss"), e.Message);
 
                 return null;
             }
@@ -295,8 +301,8 @@ namespace ratesRatesParser.Services
             }
             catch (Exception e)
             {
-                Console.WriteLine("Error parse coins rates zolotoy Club. Time: {0}. Error: {1}.", DateTime.Now.ToString("HH:mm:ss"), e.Message);
-
+                Console.WriteLine("Error parse coins rates zolotoy Club. Time: {0}. Error: {1}.",
+                    DateTime.Now.ToString("HH:mm:ss"), e.Message);
                 return null;
             }
         }
@@ -307,22 +313,21 @@ namespace ratesRatesParser.Services
             {
                 var web = new HtmlWeb();
 
-                var doc = await web.LoadFromWebAsync(UrlParseHelper.ZolotoMD);
+                var docSMPD = await web.LoadFromWebAsync(UrlParseHelper.ZolotoMDSPMD);
+                var docMMD = await web.LoadFromWebAsync(UrlParseHelper.ZolotoMDMMD);
 
-                List<double> sellPrices = doc.DocumentNode
-                    .SelectNodes("//span[@class='js-price-club']").ToList()
-                    .Take(3)
-                    .Select(x =>
-                        x.InnerText.Replace("Руб.", "").ParseToDoubleFormat())
-                    .ToList();
-
-                List<double> buyPrices = doc.DocumentNode
-                    .SelectNodes("//span[@class='js-price-buyout']").ToList()
-                    .Take(3)
-                    .Select(x =>
-                        x.InnerText.Replace("Руб.", "").ParseToDoubleFormat())
-                    .ToList();
-
+                double buyPricesSPMD = docSMPD.DocumentNode
+                    .SelectNodes("//div[@class = 'product_price']/span/div").First().InnerHtml.ParseToDoubleFormat();
+                double sellPricesSPMD = docSMPD.DocumentNode
+                    .SelectNodes(
+                        "//div[@class = 'product_price product_price__buyout']/span/div[@class = 'js-price-buyout']")
+                    .First().InnerHtml.ParseToDoubleFormat();
+                double buyPricesMMD = docMMD.DocumentNode
+                    .SelectNodes("//div[@class = 'product_price']/span/div").First().InnerHtml.ParseToDoubleFormat();
+                double sellPricesMMD = docMMD.DocumentNode
+                    .SelectNodes(
+                        "//div[@class = 'product_price product_price__buyout']/span/div[@class = 'js-price-buyout']")
+                    .First().InnerHtml.ParseToDoubleFormat();
                 DateTime parseDate = DateTime.Now;
                 Console.WriteLine("Parse coins rates Zoloto MD OK. Time: {0}.", DateTime.Now.ToString("HH:mm:ss"));
 
@@ -331,16 +336,16 @@ namespace ratesRatesParser.Services
                     new CoinsRate()
                     {
                         Acronim = "GPM",
-                        Sell = sellPrices[2],
-                        Buy = buyPrices[2],
+                        Sell = sellPricesMMD,
+                        Buy = buyPricesMMD,
                         Date = parseDate,
                         Site = UrlParseHelper.ZolotoMD
                     },
                     new CoinsRate()
                     {
                         Acronim = "GPS",
-                        Sell = sellPrices[0],
-                        Buy = buyPrices[2],
+                        Sell = sellPricesSPMD,
+                        Buy = buyPricesSPMD,
                         Date = parseDate,
                         Site = UrlParseHelper.ZolotoMD
                     }
@@ -348,9 +353,10 @@ namespace ratesRatesParser.Services
             }
             catch (Exception e)
             {
-                Console.WriteLine("Error parse coins rates Zoloto MD. Time: {0}. Error: {1}.", DateTime.Now.ToString("HH:mm:ss"), e.Message);
-
+                Console.WriteLine("Error parse coins rates Zoloto MD. Time: {0}. Error: {1}.",
+                    DateTime.Now.ToString("HH:mm:ss"), e.Message);
                 return null;
+
             }
         }
 
@@ -436,7 +442,8 @@ namespace ratesRatesParser.Services
             }
             catch (Exception e)
             {
-                Console.WriteLine("Error parse coins rates Moneta Invest. Time: {0}. Error: {1}.", DateTime.Now.ToString("HH:mm:ss"), e.Message);
+                Console.WriteLine("Error parse coins rates Moneta Invest. Time: {0}. Error: {1}.",
+                    DateTime.Now.ToString("HH:mm:ss"), e.Message);
 
                 return null;
             }
@@ -549,7 +556,8 @@ namespace ratesRatesParser.Services
 
             catch (Exception e)
             {
-                Console.WriteLine("Error parse coins rates rshb ru. Time: {0}. Error: {1}.", DateTime.Now.ToString("HH:mm:ss"), e.Message);
+                Console.WriteLine("Error parse coins rates rshb ru. Time: {0}. Error: {1}.",
+                    DateTime.Now.ToString("HH:mm:ss"), e.Message);
 
                 return null;
             }
@@ -745,31 +753,33 @@ namespace ratesRatesParser.Services
                         spmdPrices = GetCoinPricesLantaRu(coinHtml);
                     }
                 }
+
                 DateTime dateOfParse = DateTime.Now;
                 Console.WriteLine("Parse coins rates Lanta Ru OK. Time: {0}.", DateTime.Now.ToString("HH:mm:ss"));
                 return new List<CoinsRate>()
-            {
-                new CoinsRate()
                 {
-                    Acronim = "GPM",
-                    Buy = mmdPrices[1],
-                    Sell = mmdPrices[0],
-                    Date = dateOfParse,
-                    Site = UrlParseHelper.LantaRu
-                },
-                new CoinsRate()
-                {
-                    Acronim = "GPS",
-                    Buy = spmdPrices[1],
-                    Sell = spmdPrices[0],
-                    Date = dateOfParse,
-                    Site = UrlParseHelper.LantaRu
-                }
-            };
+                    new CoinsRate()
+                    {
+                        Acronim = "GPM",
+                        Buy = mmdPrices[1],
+                        Sell = mmdPrices[0],
+                        Date = dateOfParse,
+                        Site = UrlParseHelper.LantaRu
+                    },
+                    new CoinsRate()
+                    {
+                        Acronim = "GPS",
+                        Buy = spmdPrices[1],
+                        Sell = spmdPrices[0],
+                        Date = dateOfParse,
+                        Site = UrlParseHelper.LantaRu
+                    }
+                };
             }
             catch (Exception e)
             {
-                Console.WriteLine("Error parse coins rates zolotoy zapas. Time: {0}. Error: {1}.", DateTime.Now.ToString("HH:mm:ss"), e.Message);
+                Console.WriteLine("Error parse coins rates zolotoy zapas. Time: {0}. Error: {1}.",
+                    DateTime.Now.ToString("HH:mm:ss"), e.Message);
 
                 return null;
             }
@@ -781,7 +791,9 @@ namespace ratesRatesParser.Services
 
             var localPrices = coinHtml.ChildNodes
                 .Where(x => x.Name != "#text")
-                .FirstOrDefault(x => x.Attributes["class"].Value == "coinList-price" || x.Attributes["class"].Value == "coinList-price out").InnerText
+                .FirstOrDefault(x =>
+                    x.Attributes["class"].Value == "coinList-price" ||
+                    x.Attributes["class"].Value == "coinList-price out").InnerText
                 .Split('\n')
                 .Where(s => !string.IsNullOrWhiteSpace(s))
                 .ToList();
@@ -823,42 +835,45 @@ namespace ratesRatesParser.Services
                     .SelectNodes("//div[@class='product-price']/div[@class='price aligner']/span[@itemprop='price']")
                     .First().InnerText.Replace("руб.", "").ParseToDoubleFormat();
                 var SPMDBuy = htmlDocSPMD.DocumentNode
-                    .SelectNodes("//div[@class='product-action']/div[@class='redemption-price']/p/span[@class='r-price']")
+                    .SelectNodes(
+                        "//div[@class='product-action']/div[@class='redemption-price']/p/span[@class='r-price']")
                     .First().InnerText.Replace("руб.", "").ParseToDoubleFormat();
 
                 var MMDSell = htmlDocMMD.DocumentNode
                     .SelectNodes("//div[@class='product-price']/div[@class='price aligner']/span[@itemprop='price']")
                     .First().InnerText.Replace("руб.", "").ParseToDoubleFormat();
                 var MMDByu = htmlDocMMD.DocumentNode
-                    .SelectNodes("//div[@class='product-action']/div[@class='redemption-price']/p/span[@class='r-price']")
+                    .SelectNodes(
+                        "//div[@class='product-action']/div[@class='redemption-price']/p/span[@class='r-price']")
                     .First().InnerText.Replace("руб.", "").ParseToDoubleFormat();
                 DateTime parseDate = DateTime.Now;
 
                 Console.WriteLine("Parse coins rates Ts Bnk OK. Time: {0}.", DateTime.Now.ToString("HH:mm:ss"));
 
                 return new List<CoinsRate>()
-            {
-                new CoinsRate()
                 {
-                    Acronim = "GPM",
-                    Sell = MMDSell,
-                    Buy = MMDByu,
-                    Date = parseDate,
-                    Site = UrlParseHelper.CoinsTsbnkMMD
-                },
-                new CoinsRate()
-                {
-                    Acronim = "GPS",
-                    Sell = SPMDSell,
-                    Buy = SPMDBuy,
-                    Date = parseDate,
-                    Site = UrlParseHelper.CoinsTsbnkSPMD
-                }
-            };
+                    new CoinsRate()
+                    {
+                        Acronim = "GPM",
+                        Sell = MMDSell,
+                        Buy = MMDByu,
+                        Date = parseDate,
+                        Site = UrlParseHelper.CoinsTsbnkMMD
+                    },
+                    new CoinsRate()
+                    {
+                        Acronim = "GPS",
+                        Sell = SPMDSell,
+                        Buy = SPMDBuy,
+                        Date = parseDate,
+                        Site = UrlParseHelper.CoinsTsbnkSPMD
+                    }
+                };
             }
             catch (Exception e)
             {
-                Console.WriteLine("Error parse coins rates Ts Bnk. Time: {0}. Error: {1}.", DateTime.Now.ToString("HH:mm:ss"), e.Message);
+                Console.WriteLine("Error parse coins rates Ts Bnk. Time: {0}. Error: {1}.",
+                    DateTime.Now.ToString("HH:mm:ss"), e.Message);
 
                 return null;
             }
@@ -910,7 +925,8 @@ namespace ratesRatesParser.Services
             }
             catch (Exception e)
             {
-                Console.WriteLine("Error parse coins rates zolotoy zapas. Time: {0}. Error: {1}.", DateTime.Now.ToString("HH:mm:ss"), e.Message);
+                Console.WriteLine("Error parse coins rates zolotoy zapas. Time: {0}. Error: {1}.",
+                    DateTime.Now.ToString("HH:mm:ss"), e.Message);
 
                 return null;
             }
@@ -938,5 +954,75 @@ namespace ratesRatesParser.Services
 
             return coins;
         }
+        //public static async Task<List<CoinsRate>> GetCoinsRatesMkdRu()
+        //{
+        //    var option = new ChromeOptions();
+        //    option.BinaryLocation = @"C:\Program Files\Google\Chrome\Application\chrome.exe";
+
+        //    IWebDriver driver = new ChromeDriver(
+        //        Path.Combine(
+        //            Directory.GetCurrentDirectory(), "SeleniumChromeWebDriver")
+        //        , option);
+
+        //    driver.Navigate().GoToUrl((UrlParseHelper.MkbRu));
+
+        //    driver.Manage().Timeouts().PageLoad = TimeSpan.FromSeconds(5);
+
+        //    Task.Delay(5000).Wait();
+
+        //    IJavaScriptExecutor js = driver as IJavaScriptExecutor;
+
+        //    if (js != null)
+        //    {
+        //        string innerhtml = (string)js.ExecuteScript("document.documentElement.innerHTML");
+
+        //        HtmlAgilityPack.HtmlDocument doc = new HtmlAgilityPack.HtmlDocument();
+
+        //        doc.Load(innerhtml);
+
+        //        var coinPrice = doc.DocumentNode.SelectNodes("//div[@class=cols cols3]")
+        //            .FirstOrDefault().ChildNodes
+        //            .Where(x => x.InnerText.Contains("Георгий Победоносец"))
+        //            .Where(x => x.Name != "#text")
+        //            .FirstOrDefault()
+        //            .LastChild.InnerHtml.Split()[0];
+
+        //        driver.Close();
+
+        //        return new List<CoinsRate>
+        //        {
+        //            new CoinsRate(){
+        //            Date = DateTime.Now,
+        //            Site = UrlParseHelper.MkbRu,
+        //            Acronim = "GPM",
+        //            Buy = double.Parse(coinPrice),
+        //            Sell = 0,
+        //            }
+        //        };
+
+        //    }
+        //    return null;
+        //}
+
+        //public static async Task<List<CoinsRate>> GetCoinsRatesTkbbank()
+        //{
+        //    try
+        //    {
+        //        HtmlWeb web = new HtmlWeb();
+
+        //        var htmlDoc = await web.LoadFromWebAsync(UrlParseHelper.Tkbbank);
+
+        //        var TkdRu = htmlDoc.DocumentNode
+        //            .SelectNodes("//table[@class = 'tbl-switcher'] /tbody /tr[1]/td[6]]'] /tbody /tr/td]").ToList();
+        //        //*[@id="main"]/div/section/div[2]/div/div/table/tbody/tr[1]/td[6]
+        //        //table[@class = 'tbl-switcher'] /tbody /tr/td]
+        //    }
+        //    catch
+        //    {
+
+        //    }
+
+        //    return null;
+        //}
     }
 }

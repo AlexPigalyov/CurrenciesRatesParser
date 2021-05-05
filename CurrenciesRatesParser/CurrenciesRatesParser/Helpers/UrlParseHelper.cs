@@ -17,7 +17,9 @@ namespace CurrenciesRatesParser.Helpers
         public static string RuExchangeRatesF = "https://ru.exchange-rates.org/currentRates/F/USD";
         public static string ZolotoyZapas = "https://www.zolotoy-zapas.ru/";
         public static string ZolotoyClub = "https://www.zolotoy-club.ru/";
-        public static string ZolotoMD = "https://zoloto-md.ru/bullion-coins";
+        public static string ZolotoMDSPMD = "https://zoloto-md.ru/bullion-coins/i-rossiya-i-sssr/zolotaya-investiczionnaya-moneta-georgij-pobedonosecz-mmd,-7,78-g-chistogo-zolota-proba-0,999";
+        public static string ZolotoMDMMD = "https://zoloto-md.ru/bullion-coins/i-rossiya-i-sssr/zolotaya-moneta-georgij-pobedonosecz-kupit-czena-investiczionnoj-monetyi-pobedonosecz-nominalom-50-rublej";
+        public static string ZolotoMD = "https://zoloto-md.ru/";
         public static string MonetaInvest = "https://msk.monetainvest.ru/";
         public static string VfBank = "https://www.vfbank.ru/fizicheskim-licam/monety/";
         public static string Rshb = "https://www.rshb.ru/natural/coins/";
@@ -28,5 +30,9 @@ namespace CurrenciesRatesParser.Helpers
         public static string CoinsTsbnkSPMD = "https://coins.tsbnk.ru/katalog/rossiyskie/investitsionnaya-rossiyskaya-moneta-georgiy-pobedonosets-spmd-50-rub-2018-2019-gg-zoloto-7-78-gr-spm/";
         public static string CoinsTsbnkMMD = "https://coins.tsbnk.ru/katalog/rossiyskie/investitsionnaya-rossiyskaya-moneta-2018-georgiy-pobedonosets-mmd-50-rub-2018-g-v-zoloto-7-78-gr-mmd/";
         public static string ZolotoyDvor = "https://www.zolotoydvor.ru/Zolotye-monety-Rossii_100g.html";
+        public static string MkbRu = "https://mkb.ru/coins";
+        public static string Tkbbank = "https://mkb.ru/coins";
+     
+
     }
 }
