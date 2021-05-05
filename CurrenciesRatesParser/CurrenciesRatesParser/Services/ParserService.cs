@@ -26,7 +26,7 @@ namespace ratesRatesParser.Services
 
                 using (WebClient client = new WebClient())
                 {
-                    string json = await client.DownloadStringTaskAsync(UrlParseHelper.Sberbank);
+                    string json = await client.DownloadStringTaskAsync(UrlParseHelper.SberbankCoinsUrl);
 
                     JObject o = JObject.Parse(json);
                     string priceBuy = (string) o["priceBuy"];
@@ -456,7 +456,7 @@ namespace ratesRatesParser.Services
                 List<CoinsRate> rates = new List<CoinsRate>();
                 var web = new HtmlWeb();
 
-                var doc = await web.LoadFromWebAsync(UrlParseHelper.VfBank);
+                var doc = await web.LoadFromWebAsync(UrlParseHelper.VfBankCoinUrl);
 
                 var coints = doc.DocumentNode
                     .SelectNodes("//div[@class='coin']").ToList(); // выбираем блоки монет
@@ -567,7 +567,7 @@ namespace ratesRatesParser.Services
         {
             HtmlWeb web = new HtmlWeb();
 
-            var htmlDoc = await web.LoadFromWebAsync(UrlParseHelper.Rshb);
+            var htmlDoc = await web.LoadFromWebAsync(UrlParseHelper.RshbCoinUrl);
 
             var idLink = htmlDoc.DocumentNode.SelectSingleNode(xpath);
 
@@ -734,7 +734,7 @@ namespace ratesRatesParser.Services
             {
                 var web = new HtmlWeb();
 
-                var htmlDoc = await web.LoadFromWebAsync(UrlParseHelper.LantaRu);
+                var htmlDoc = await web.LoadFromWebAsync(UrlParseHelper.LantaRuCoinsUrl);
 
                 var coins = htmlDoc.DocumentNode.SelectNodes("//div[@class='coinList-cont']").Where(x =>
                     x.InnerText.Contains("Георгий Победоносец"));
@@ -858,7 +858,7 @@ namespace ratesRatesParser.Services
                         Sell = MMDSell,
                         Buy = MMDByu,
                         Date = parseDate,
-                        Site = UrlParseHelper.CoinsTsbnkMMD
+                        Site = UrlParseHelper.CoinsTsbnk
                     },
                     new CoinsRate()
                     {
@@ -866,7 +866,7 @@ namespace ratesRatesParser.Services
                         Sell = SPMDSell,
                         Buy = SPMDBuy,
                         Date = parseDate,
-                        Site = UrlParseHelper.CoinsTsbnkSPMD
+                        Site = UrlParseHelper.CoinsTsbnk
                     }
                 };
             }
@@ -885,7 +885,7 @@ namespace ratesRatesParser.Services
             {
                 HtmlWeb web = new HtmlWeb();
 
-                var htmlDoc = await web.LoadFromWebAsync(UrlParseHelper.ZolotoyDvor);
+                var htmlDoc = await web.LoadFromWebAsync(UrlParseHelper.ZolotoyDvorCoinUrl);
 
                 var spmdCoinHtml = htmlDoc.DocumentNode.SelectNodes("//tr")
                     .FirstOrDefault(x =>
