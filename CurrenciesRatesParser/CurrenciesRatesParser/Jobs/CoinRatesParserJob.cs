@@ -24,7 +24,7 @@ namespace CurrenciesRatesParser.Jobs
             Task<List<CoinsRate>> coinsRatesLantaRuTask = ParserService.GetCoinsRatesLantaRu();
             Task<List<CoinsRate>> coinsRatesTsbnkTask = ParserService.GetCoinsRateTsBnk();
             Task<List<CoinsRate>> coinsRatesZolotoidvorTask = ParserService.GetCoinsRatesZolotoyDvor();
-            //Task<List<CoinsRate>> coinsRatesMkdRuTask = ParserService.GetCoinsRatesMkdRu();
+            Task<List<CoinsRate>> coinsRatesMkdRuTask = ParserService.GetCoinsRatesMkdRu();
             //Task<List<CoinsRate>> coinsRatesTkbbankTask = ParserService.GetCoinsRatesTkbbank();
 
 
@@ -44,8 +44,8 @@ namespace CurrenciesRatesParser.Jobs
                 coinsRatesSberbankTask,
                 coinsRatesLantaRuTask,
                 coinsRatesTsbnkTask,
-                coinsRatesZolotoidvorTask
-                //coinsRatesMkdRuTask
+                coinsRatesZolotoidvorTask,
+                coinsRatesMkdRuTask
                 /*coinsRatesTkbbankTask*/);
 
             List<CoinsRate> coinsRatesZolotoyZapas = await coinsRatesZolotoyZapasTask;
@@ -60,7 +60,7 @@ namespace CurrenciesRatesParser.Jobs
             List<CoinsRate> coinsRatesLantaRu = await coinsRatesLantaRuTask;
             List<CoinsRate> coinsRatesTsbnk = await coinsRatesTsbnkTask;
             List<CoinsRate> coinsRatesZolotoidvor = await coinsRatesZolotoidvorTask;
-            //List<CoinsRate> coinsRatesMkdRu = await coinsRatesMkdRuTask;
+            List<CoinsRate> coinsRatesMkdRu = await coinsRatesMkdRuTask;
             //List<CoinsRate> coinsRatesTkbbank = await coinsRatesTkbbankTask;
 
 
@@ -90,8 +90,8 @@ namespace CurrenciesRatesParser.Jobs
             Console.WriteLine("Coins rates TsBnk saved. Time: {0}", DateTime.Now.ToString("HH:mm:ss"));
             CoinsRatesDataHelper.AddCoinsRatesRange(coinsRatesZolotoidvor);
             Console.WriteLine("Coins rates ZolotoiDvor saved. Time: {0}", DateTime.Now.ToString("HH:mm:ss"));
-            //CoinsRatesDataHelper.AddCoinsRatesRange(coinsRatesMkdRu);
-            //Console.WriteLine("Coins rates MkdRu saved. Time: {0}", DateTime.Now.ToString("HH:mm:ss"));
+            CoinsRatesDataHelper.AddCoinsRatesRange(coinsRatesMkdRu);
+            Console.WriteLine("Coins rates MkdRu saved. Time: {0}", DateTime.Now.ToString("HH:mm:ss"));
             //CoinsRatesDataHelper.AddCoinsRatesRange(coinsRatesTkbbank);
             //Console.WriteLine("Coins rates Tkbbank saved. Time: {0}", DateTime.Now.ToString("HH:mm:ss"));
 
