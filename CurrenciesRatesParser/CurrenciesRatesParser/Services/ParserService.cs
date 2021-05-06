@@ -336,8 +336,8 @@ namespace ratesRatesParser.Services
                     new CoinsRate()
                     {
                         Acronim = "GPM",
-                        Sell =buyPricesMMD ,
-                        Buy = sellPricesMMD,
+                        Sell =sellPricesMMD ,
+                        Buy = buyPricesMMD,
                         Date = parseDate,
                         Site = UrlParseHelper.ZolotoMD
                     },
