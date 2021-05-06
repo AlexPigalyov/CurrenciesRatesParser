@@ -588,6 +588,7 @@ namespace ratesRatesParser.Services
             {
                 buyPrice = "0";
             }
+
             string sellPrice = "0";
             try
             {
@@ -971,75 +972,83 @@ namespace ratesRatesParser.Services
 
             return coins;
         }
-        //public static async Task<List<CoinsRate>> GetCoinsRatesMkdRu()
-        //{
-        //    var option = new ChromeOptions();
-        //    option.BinaryLocation = @"C:\Program Files\Google\Chrome\Application\chrome.exe";
 
-        //    IWebDriver driver = new ChromeDriver(
-        //        Path.Combine(
-        //            Directory.GetCurrentDirectory(), "SeleniumChromeWebDriver")
-        //        , option);
+        public static async Task<List<CoinsRate>> GetCoinsRatesMkdRu()
+        {
+            try
+            {
+                var option = new ChromeOptions();
+                option.BinaryLocation = @"C:\Program Files\Google\Chrome\Application\chrome.exe";
 
-        //    driver.Navigate().GoToUrl((UrlParseHelper.MkbRu));
+                IWebDriver driver = new ChromeDriver(
+                    Path.Combine(
+                        Directory.GetCurrentDirectory(), "SeleniumChromeWebDriver")
+                    , option);
 
-        //    driver.Manage().Timeouts().PageLoad = TimeSpan.FromSeconds(5);
+                driver.Navigate().GoToUrl((UrlParseHelper.MkbRu));
 
-        //    Task.Delay(5000).Wait();
+                driver.Manage().Timeouts().PageLoad = TimeSpan.FromSeconds(5);
 
-        //    IJavaScriptExecutor js = driver as IJavaScriptExecutor;
+                Task.Delay(5000).Wait();
 
-        //    if (js != null)
-        //    {
-        //        string innerhtml = (string)js.ExecuteScript("document.documentElement.innerHTML");
 
-        //        HtmlAgilityPack.HtmlDocument doc = new HtmlAgilityPack.HtmlDocument();
+                string innerHtml = driver.PageSource;
 
-        //        doc.Load(innerhtml);
+                HtmlAgilityPack.HtmlDocument doc = new HtmlAgilityPack.HtmlDocument();
 
-        //        var coinPrice = doc.DocumentNode.SelectNodes("//div[@class=cols cols3]")
-        //            .FirstOrDefault().ChildNodes
-        //            .Where(x => x.InnerText.Contains("Георгий Победоносец"))
-        //            .Where(x => x.Name != "#text")
-        //            .FirstOrDefault()
-        //            .LastChild.InnerHtml.Split()[0];
 
-        //        driver.Close();
+                doc.LoadHtml(innerHtml);
 
-        //        return new List<CoinsRate>
-        //        {
-        //            new CoinsRate(){
-        //            Date = DateTime.Now,
-        //            Site = UrlParseHelper.MkbRu,
-        //            Acronim = "GPM",
-        //            Buy = double.Parse(coinPrice),
-        //            Sell = 0,
-        //            }
-        //        };
+                var coinPrice = doc.DocumentNode.SelectNodes("//div[@class='cols cols3']")
+                    .FirstOrDefault().ChildNodes
+                    .Where(x => x.InnerText.Contains("Георгий Победоносец"))
+                    .Where(x => x.Name != "#text")
+                    .FirstOrDefault()
+                    .LastChild.InnerHtml.Split()[0];
 
-        //    }
-        //    return null;
-        //}
+                driver.Close();
+                return new List<CoinsRate>
+                {
+                    new CoinsRate()
+                    {
+                        Date = DateTime.Now,
+                        Site = UrlParseHelper.MkbRu,
+                        Acronim = "GPM",
+                        Buy = double.Parse(coinPrice),
+                        Sell = 0,
+                    }
+                };
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("Error parse coins rates MkdRu. Time: {0}. Error: {1}.",
+                    DateTime.Now.ToString("HH:mm:ss"), e.Message);
 
-        //public static async Task<List<CoinsRate>> GetCoinsRatesTkbbank()
-        //{
-        //    try
-        //    {
-        //        HtmlWeb web = new HtmlWeb();
+                return null;
+            }
 
-        //        var htmlDoc = await web.LoadFromWebAsync(UrlParseHelper.Tkbbank);
 
-        //        var TkdRu = htmlDoc.DocumentNode
-        //            .SelectNodes("//table[@class = 'tbl-switcher'] /tbody /tr[1]/td[6]]'] /tbody /tr/td]").ToList();
-        //        //*[@id="main"]/div/section/div[2]/div/div/table/tbody/tr[1]/td[6]
-        //        //table[@class = 'tbl-switcher'] /tbody /tr/td]
-        //    }
-        //    catch
-        //    {
-
-        //    }
-
-        //    return null;
-        //}
+        }
     }
+    //public static async Task<List<CoinsRate>> GetCoinsRatesTkbbank()
+    //{
+    //    try
+    //    {
+    //        HtmlWeb web = new HtmlWeb();
+
+    //        var htmlDoc = await web.LoadFromWebAsync(UrlParseHelper.Tkbbank);
+
+    //        var TkdRu = htmlDoc.DocumentNode
+    //            .SelectNodes("//table[@class = 'tbl-switcher'] /tbody /tr[1]/td[6]]'] /tbody /tr/td]").ToList();
+    //        //*[@id="main"]/div/section/div[2]/div/div/table/tbody/tr[1]/td[6]
+    //        //table[@class = 'tbl-switcher'] /tbody /tr/td]
+    //    }
+    //    catch
+    //    {
+
+    //    }
+
+    //    return null;
+    //}
 }
+
