@@ -38,6 +38,7 @@ namespace CurrenciesRatesParser.Helpers
         public static string ZolotoyDvorCoinUrl = "https://www.zolotoydvor.ru/Zolotye-monety-Rossii_100g.html";
         public static string ZolotoyDvor = "https://www.zolotoydvor.ru/";
         public static string MkbRu = "https://mkb.ru/coins";
-        public static string Tkbbank = "";
+        public static string TkbbankCoinUrl = "https://www.tkbbank.ru/private/savings/metal_accounts/coin/";
+        public static string Tkbbank = "https://www.tkbbank.ru/";
     }
 }

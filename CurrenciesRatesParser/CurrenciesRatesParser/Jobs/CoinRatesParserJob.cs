@@ -25,7 +25,7 @@ namespace CurrenciesRatesParser.Jobs
             Task<List<CoinsRate>> coinsRatesTsbnkTask = ParserService.GetCoinsRateTsBnk();
             Task<List<CoinsRate>> coinsRatesZolotoidvorTask = ParserService.GetCoinsRatesZolotoyDvor();
             Task<List<CoinsRate>> coinsRatesMkdRuTask = ParserService.GetCoinsRatesMkdRu();
-            //Task<List<CoinsRate>> coinsRatesTkbbankTask = ParserService.GetCoinsRatesTkbbank();
+            Task<List<CoinsRate>> coinsRatesTkbbankTask = ParserService.GetCoinsRatesTkbbank();
 
 
 
@@ -45,8 +45,8 @@ namespace CurrenciesRatesParser.Jobs
                 coinsRatesLantaRuTask,
                 coinsRatesTsbnkTask,
                 coinsRatesZolotoidvorTask,
-                coinsRatesMkdRuTask
-                /*coinsRatesTkbbankTask*/);
+                coinsRatesMkdRuTask,
+                coinsRatesTkbbankTask);
 
             List<CoinsRate> coinsRatesZolotoyZapas = await coinsRatesZolotoyZapasTask;
             List<CoinsRate> coinsRatesZolotoMD = await coinsRatesZolotoMDTask;
@@ -61,7 +61,7 @@ namespace CurrenciesRatesParser.Jobs
             List<CoinsRate> coinsRatesTsbnk = await coinsRatesTsbnkTask;
             List<CoinsRate> coinsRatesZolotoidvor = await coinsRatesZolotoidvorTask;
             List<CoinsRate> coinsRatesMkdRu = await coinsRatesMkdRuTask;
-            //List<CoinsRate> coinsRatesTkbbank = await coinsRatesTkbbankTask;
+            List<CoinsRate> coinsRatesTkbbank = await coinsRatesTkbbankTask;
 
 
 
@@ -92,8 +92,8 @@ namespace CurrenciesRatesParser.Jobs
             Console.WriteLine("Coins rates ZolotoiDvor saved. Time: {0}", DateTime.Now.ToString("HH:mm:ss"));
             CoinsRatesDataHelper.AddCoinsRatesRange(coinsRatesMkdRu);
             Console.WriteLine("Coins rates MkdRu saved. Time: {0}", DateTime.Now.ToString("HH:mm:ss"));
-            //CoinsRatesDataHelper.AddCoinsRatesRange(coinsRatesTkbbank);
-            //Console.WriteLine("Coins rates Tkbbank saved. Time: {0}", DateTime.Now.ToString("HH:mm:ss"));
+            CoinsRatesDataHelper.AddCoinsRatesRange(coinsRatesTkbbank);
+            Console.WriteLine("Coins rates Tkbbank saved. Time: {0}", DateTime.Now.ToString("HH:mm:ss"));
 
             // Save to GoldTech DataBase Georgiy Pobedonosec gold coin price 
             // id = 46
