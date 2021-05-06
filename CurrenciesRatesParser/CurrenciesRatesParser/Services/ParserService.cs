@@ -773,7 +773,7 @@ namespace ratesRatesParser.Services
                 }
 
                 DateTime dateOfParse = DateTime.Now;
-                Console.WriteLine("Parse coins rates Lanta Ru OK. Time: {0}.", DateTime.Now.ToString("HH:mm:ss"));
+                Console.WriteLine("Parse coins rates LantaRu OK. Time: {0}.", DateTime.Now.ToString("HH:mm:ss"));
                 return new List<CoinsRate>()
                 {
                     new CoinsRate()
@@ -796,7 +796,7 @@ namespace ratesRatesParser.Services
             }
             catch (Exception e)
             {
-                Console.WriteLine("Error parse coins rates zolotoy zapas. Time: {0}. Error: {1}.",
+                Console.WriteLine("Error parse coins rates LantaRu. Time: {0}. Error: {1}.",
                     DateTime.Now.ToString("HH:mm:ss"), e.Message);
 
                 return null;
@@ -919,7 +919,7 @@ namespace ratesRatesParser.Services
                 var spmdPrices = GetCoinPricesZolotoyDvor(spmdCoinHtml);
 
                 DateTime parseDate = DateTime.Now;
-                Console.WriteLine("Parse coins rates zolotoy zapas OK. Time: {0}.", DateTime.Now.ToString("HH:mm:ss"));
+                Console.WriteLine("Parse coins rates ZolotoyDvor OK. Time: {0}.", DateTime.Now.ToString("HH:mm:ss"));
 
                 return new List<CoinsRate>
                 {
@@ -943,7 +943,7 @@ namespace ratesRatesParser.Services
             }
             catch (Exception e)
             {
-                Console.WriteLine("Error parse coins rates zolotoy zapas. Time: {0}. Error: {1}.",
+                Console.WriteLine("Error parse coins rates ZolotoyDvor. Time: {0}. Error: {1}.",
                     DateTime.Now.ToString("HH:mm:ss"), e.Message);
 
                 return null;
@@ -1005,7 +1005,9 @@ namespace ratesRatesParser.Services
                     .Where(x => x.Name != "#text")
                     .FirstOrDefault()
                     .LastChild.InnerHtml.Split()[0];
+                DateTime parseDate = DateTime.Now;
 
+                Console.WriteLine("Parse coins rates MkdRu OK. Time: {0}.", DateTime.Now.ToString("HH:mm:ss"));
                 driver.Close();
                 return new List<CoinsRate>
                 {
@@ -1029,26 +1031,70 @@ namespace ratesRatesParser.Services
 
 
         }
+
+        public static async Task<List<CoinsRate>> GetCoinsRatesTkbbank()
+        {
+            try
+            {
+                HtmlWeb web = new HtmlWeb();
+
+                var htmlDoc = await web.LoadFromWebAsync(UrlParseHelper.TkbbankCoinUrl);
+                double coinsBuy;
+                try
+                {
+                    coinsBuy = htmlDoc.DocumentNode.SelectNodes("//table[@class='tbl-switcher']/tbody/tr/td[6]")
+                        .First().InnerHtml.ParseToDoubleFormat();
+                }
+                catch (Exception e)
+                {
+                    coinsBuy = 0;
+                }
+
+                double coinsSell;
+                try
+                {
+                     coinsSell = htmlDoc.DocumentNode.SelectNodes("//table[@class='tbl-switcher']/tbody/tr/td[7]")
+                        .First().InnerHtml.Replace("\r\n\t", "").Replace("\t", "").ParseToDoubleFormat();
+                }
+                catch (Exception e)
+                {
+                    coinsSell = 0;
+                }
+                DateTime parseDate = DateTime.Now;
+                Console.WriteLine("Parse coins rates Tkbbank OK. Time: {0}.", DateTime.Now.ToString("HH:mm:ss"));
+                return new List<CoinsRate>
+                {
+                    new CoinsRate()
+                    {
+                        Acronim = "GPM",
+                        Sell = coinsSell,
+                        Buy = coinsBuy,
+                        Date = parseDate,
+                        Site = UrlParseHelper.Tkbbank
+                    },
+                    new CoinsRate()
+                    {
+                        Acronim = "GPS",
+                        Sell = coinsSell,
+                        Buy = coinsBuy,
+                        Date = parseDate,
+                        Site = UrlParseHelper.Tkbbank
+                    }
+                };
+
+
+
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("Error parse coins rates Tkbbank. Time: {0}. Error: {1}.",
+                    DateTime.Now.ToString("HH:mm:ss"), e.Message);
+            }
+
+            return null;
+        }
+
     }
-    //public static async Task<List<CoinsRate>> GetCoinsRatesTkbbank()
-    //{
-    //    try
-    //    {
-    //        HtmlWeb web = new HtmlWeb();
-
-    //        var htmlDoc = await web.LoadFromWebAsync(UrlParseHelper.Tkbbank);
-
-    //        var TkdRu = htmlDoc.DocumentNode
-    //            .SelectNodes("//table[@class = 'tbl-switcher'] /tbody /tr[1]/td[6]]'] /tbody /tr/td]").ToList();
-    //        //*[@id="main"]/div/section/div[2]/div/div/table/tbody/tr[1]/td[6]
-    //        //table[@class = 'tbl-switcher'] /tbody /tr/td]
-    //    }
-    //    catch
-    //    {
-
-    //    }
-
-    //    return null;
-    //}
 }
+
 
