@@ -316,15 +316,15 @@ namespace ratesRatesParser.Services
                 var docSMPD = await web.LoadFromWebAsync(UrlParseHelper.ZolotoMDSPMD);
                 var docMMD = await web.LoadFromWebAsync(UrlParseHelper.ZolotoMDMMD);
 
-                double buyPricesSPMD = docSMPD.DocumentNode
-                    .SelectNodes("//div[@class = 'product_price']/span/div").First().InnerHtml.ParseToDoubleFormat();
                 double sellPricesSPMD = docSMPD.DocumentNode
+                    .SelectNodes("//div[@class = 'product_price']/span/div").First().InnerHtml.ParseToDoubleFormat();
+                double buyPricesSPMD = docSMPD.DocumentNode
                     .SelectNodes(
                         "//div[@class = 'product_price product_price__buyout']/span/div[@class = 'js-price-buyout']")
                     .First().InnerHtml.ParseToDoubleFormat();
-                double buyPricesMMD = docMMD.DocumentNode
-                    .SelectNodes("//div[@class = 'product_price']/span/div").First().InnerHtml.ParseToDoubleFormat();
                 double sellPricesMMD = docMMD.DocumentNode
+                    .SelectNodes("//div[@class = 'product_price']/span/div").First().InnerHtml.ParseToDoubleFormat();
+                double buyPricesMMD = docMMD.DocumentNode
                     .SelectNodes(
                         "//div[@class = 'product_price product_price__buyout']/span/div[@class = 'js-price-buyout']")
                     .First().InnerHtml.ParseToDoubleFormat();
@@ -336,15 +336,15 @@ namespace ratesRatesParser.Services
                     new CoinsRate()
                     {
                         Acronim = "GPM",
-                        Sell = sellPricesMMD,
-                        Buy = buyPricesMMD,
+                        Sell =buyPricesMMD ,
+                        Buy = sellPricesMMD,
                         Date = parseDate,
                         Site = UrlParseHelper.ZolotoMD
                     },
                     new CoinsRate()
                     {
                         Acronim = "GPS",
-                        Sell = sellPricesSPMD,
+                        Sell= sellPricesSPMD ,
                         Buy = buyPricesSPMD,
                         Date = parseDate,
                         Site = UrlParseHelper.ZolotoMD
