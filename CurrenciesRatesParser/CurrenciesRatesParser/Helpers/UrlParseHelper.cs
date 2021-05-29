@@ -17,10 +17,14 @@ namespace CurrenciesRatesParser.Helpers
         public static string RuExchangeRatesM = "https://ru.exchange-rates.org/currentRates/M/USD";
         public static string RuExchangeRatesF = "https://ru.exchange-rates.org/currentRates/F/USD";
         public static string ZolotoyZapas = "https://www.zolotoy-zapas.ru/";
+        public static string ZolotoyZapasSPMD = "https://www.zolotoy-zapas.ru/coins-price/georgiy-pobedonosets-gold-quarter-oz-bullion-coin-spmd-russia/";
+        public static string ZolotoyZapasMMD = "https://www.zolotoy-zapas.ru/coins-price/georgiy-pobedonosets-gold-coin-quarter-oz/";
         public static string ZolotoyClub = "https://www.zolotoy-club.ru/";
         public static string ZolotoMDSPMD = "https://zoloto-md.ru/bullion-coins/i-rossiya-i-sssr/zolotaya-investiczionnaya-moneta-georgij-pobedonosecz-mmd,-7,78-g-chistogo-zolota-proba-0,999";
         public static string ZolotoMDMMD = "https://zoloto-md.ru/bullion-coins/i-rossiya-i-sssr/zolotaya-moneta-georgij-pobedonosecz-kupit-czena-investiczionnoj-monetyi-pobedonosecz-nominalom-50-rublej";
         public static string ZolotoMD = "https://zoloto-md.ru/";
+        public static string MonetaInvestSPMD = "https://monetainvest.ru/50-rublej-georgij-pobedonosec-2020-spmd-au-7-78";
+        public static string MonetaInvestMMD = "https://monetainvest.ru/50-rublej-georgij-pobedonosec-2018-2020-mmd-au-7-78";
         public static string MonetaInvest = "https://msk.monetainvest.ru/";
         public static string VfBankCoinUrl = "https://www.vfbank.ru/fizicheskim-licam/monety/";
         public static string VfBank = "https://www.vfbank.ru/";
