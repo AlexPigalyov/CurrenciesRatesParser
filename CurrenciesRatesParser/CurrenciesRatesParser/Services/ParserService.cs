@@ -205,17 +205,52 @@ namespace ratesRatesParser.Services
             {
                 var web = new HtmlWeb();
 
-                var doc = await web.LoadFromWebAsync(UrlParseHelper.ZolotoyZapas);
+                var docSPMD = await web.LoadFromWebAsync(UrlParseHelper.ZolotoyZapasSPMD);
+                var docMMD = await web.LoadFromWebAsync(UrlParseHelper.ZolotoyZapasMMD);
 
-                List<double> prices = doc.DocumentNode
-                    .SelectNodes("//div[@class='coins-tile__price-val js-only-currency-rur']").ToList()
-                    .Take(4)
-                    .Select(x =>
-                        x.InnerText.ParseToDoubleFormat())
-                    .ToList();
+                var sellSelect = "//table[@class='card__table-purchase']/tbody/tr/td[@class='card__cell-cost']";
+                var buySelect = "//table[@class='card__table-sale']/tbody/tr/td[@class='card__cell-cost']";
 
-                var mmd = prices.Take(2).ToList();
-                var spmd = prices.Skip(2).ToList();
+                double sellSPMDPrice = 0;
+                try
+                {
+                    sellSPMDPrice = docSPMD.DocumentNode.SelectSingleNode(sellSelect).InnerHtml.Replace("<i class=\"icon-rouble\"></i>\n", "").ParseToDoubleFormat();
+                }
+                catch
+                {
+                    sellSPMDPrice = 0;
+                }
+
+                double sellMMDPrice = 0;
+                try
+                {
+                    sellMMDPrice = docMMD.DocumentNode.SelectSingleNode(sellSelect).InnerHtml.Replace("<i class=\"icon-rouble\"></i>\n", "").ParseToDoubleFormat();
+                }
+                catch
+                {
+                    sellMMDPrice = 0;
+                }
+
+                double buySPMDPrice = 0;
+                try
+                {
+                    buySPMDPrice = docSPMD.DocumentNode.SelectSingleNode(buySelect).InnerHtml.Replace("<i class=\"icon-rouble\"></i>\n", "").ParseToDoubleFormat();
+                }
+                catch
+                {
+                    buySPMDPrice = 0;
+                }
+                double buyMMDPrice = 0;
+                try
+                {
+                    buyMMDPrice = docMMD.DocumentNode.SelectSingleNode(buySelect).InnerHtml.Replace("<i class=\"icon-rouble\"></i>\n", "").ParseToDoubleFormat();
+                }
+                catch
+                {
+                    buyMMDPrice = 0;
+                }
+
+
 
                 DateTime parseDate = DateTime.Now;
 
@@ -226,16 +261,16 @@ namespace ratesRatesParser.Services
                     new CoinsRate()
                     {
                         Acronim = "GPM",
-                        Sell = mmd[0],
-                        Buy = mmd[1],
+                        Sell = sellMMDPrice,
+                        Buy = buyMMDPrice,
                         Date = parseDate,
                         Site = UrlParseHelper.ZolotoyZapas
                     },
                     new CoinsRate()
                     {
                         Acronim = "GPS",
-                        Sell = spmd[0],
-                        Buy = spmd[1],
+                        Sell = sellSPMDPrice,
+                        Buy = buySPMDPrice,
                         Date = parseDate,
                         Site = UrlParseHelper.ZolotoyZapas
                     }
