@@ -315,9 +315,8 @@ namespace ratesRatesParser.Services
 
                 var docSMPD = await web.LoadFromWebAsync(UrlParseHelper.ZolotoMDSPMD);
                 var docMMD = await web.LoadFromWebAsync(UrlParseHelper.ZolotoMDMMD);
-
                 double sellPricesSPMD = docSMPD.DocumentNode
-                    .SelectNodes("//div[@class = 'product_price']/span/div").First().InnerHtml.ParseToDoubleFormat();
+                        .SelectNodes("//div[@class = 'product_price']/span/div").First().InnerHtml.ParseToDoubleFormat();
                 double buyPricesSPMD = docSMPD.DocumentNode
                     .SelectNodes(
                         "//div[@class = 'product_price product_price__buyout']/span/div[@class = 'js-price-buyout']")
@@ -367,64 +366,64 @@ namespace ratesRatesParser.Services
                 List<CoinsRate> rates = new List<CoinsRate>();
                 var web = new HtmlWeb();
 
-                var doc = await web.LoadFromWebAsync(UrlParseHelper.MonetaInvest);
+                var docSpmd = await web.LoadFromWebAsync(UrlParseHelper.MonetaInvestSPMD);
+                var docMmd = await web.LoadFromWebAsync(UrlParseHelper.MonetaInvestMMD);
 
-                var coints = doc.DocumentNode
-                    .SelectNodes("//div[@class='monet1']").ToList(); // выбираем блоки монет
+                var sellSelect = "//span[@class='mon-buy']";
+                var buySelect = "//div[@class='infoblock block-1']/div[11]";
 
-                // фильтруем монеты по тексту
-                var cointMMD = coints.FirstOrDefault(e =>
-                    e.InnerText.Contains("Георгий Победоносец") && e.InnerText.Contains("ММД"));
-                var cointSPMD = coints.FirstOrDefault(e =>
-                    e.InnerText.Contains("Георгий Победоносец") && e.InnerText.Contains("СПМД"));
 
-                string saleCointMMD;
-                string saleCointSPMD;
-
+                double sellSPMDPrice = 0;
                 try
                 {
-                    saleCointMMD = cointMMD.InnerText
-                        .Split(new string[] { "Продажа:" }, StringSplitOptions.None)[1]
-                        .Split('р')[0]
-                        .Trim();
+                    sellSPMDPrice = docSpmd.DocumentNode.SelectSingleNode(sellSelect).InnerText.Replace("Продаем:", "").Replace(" р", "").ParseToDoubleFormat();
                 }
                 catch
                 {
-                    saleCointMMD = "0";
+                    sellSPMDPrice = 0;
                 }
 
+                double sellMMDPrice = 0;
                 try
                 {
-                    saleCointSPMD = cointSPMD.InnerText
-                        .Split(new string[] { "Продажа:" }, StringSplitOptions.None)[1]
-                        .Split('р')[0]
-                        .Trim();
+                    sellMMDPrice = docMmd.DocumentNode.SelectSingleNode(sellSelect).InnerText.Replace("Продаем:", "").Replace(" р", "").ParseToDoubleFormat();
+
                 }
                 catch
                 {
-                    saleCointSPMD = "0";
+                    sellMMDPrice = 0;
                 }
 
-                var buyCointMMD = cointMMD.InnerText
-                    .Split(new string[] { "Покупка:" }, StringSplitOptions.None)[1]
-                    .Split('р')[0]
-                    .Trim();
+                double buySPMDPrice = 0;
+                try
+                {
+                    buySPMDPrice = docSpmd.DocumentNode.SelectSingleNode(buySelect).InnerHtml.Replace("Покупаем: ", "").Replace(" \n\t", "").Replace(" р", "").ParseToDoubleFormat();
 
-                var buyCointSPMD = cointSPMD.InnerText
-                    .Split(new string[] { "Покупка:" }, StringSplitOptions.None)[1]
-                    .Split('р')[0]
-                    .Trim();
+                }
+                catch
+                {
+                    buySPMDPrice = 0;
+                }
+                
+                double buyMMDPrice;
+                try
+                {
+                    buyMMDPrice = docMmd.DocumentNode.SelectSingleNode(buySelect).InnerHtml.Replace("Покупаем: ", "").Replace(" \n\t", "").Replace(" р", "").ParseToDoubleFormat();
+                }
+                catch
+                {
+                    buyMMDPrice = 0;
+                }
 
                 DateTime parseDate = DateTime.Now;
-
-                Console.WriteLine("Parse coins rates Moneta Invest OK. Time: {0}.", DateTime.Now.ToString("HH:mm:ss"));
+                Console.WriteLine("Parse coins rates MonetaInvest OK. Time: {0}.", DateTime.Now.ToString("HH:mm:ss"));
 
                 rates.Add(
                     new CoinsRate
                     {
                         Acronim = "GPM",
-                        Sell = saleCointMMD.ParseToDoubleFormat(),
-                        Buy = buyCointMMD.ParseToDoubleFormat(),
+                        Sell = sellMMDPrice,
+                        Buy = buyMMDPrice,
                         Date = parseDate,
                         Site = UrlParseHelper.MonetaInvest
                     });
@@ -433,8 +432,8 @@ namespace ratesRatesParser.Services
                     new CoinsRate
                     {
                         Acronim = "GPS",
-                        Sell = saleCointSPMD.ParseToDoubleFormat(),
-                        Buy = buyCointSPMD.ParseToDoubleFormat(),
+                        Sell = sellSPMDPrice,
+                        Buy = buySPMDPrice,
                         Date = parseDate,
                         Site = UrlParseHelper.MonetaInvest
                     });
