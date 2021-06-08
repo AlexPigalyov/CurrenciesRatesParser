@@ -4,13 +4,21 @@ using Quartz.Impl;
 using System;
 using System.Configuration;
 
-namespace CurrenciesRatesParser
+namespace System
 {
+    public static class DateTimeExt
+    {
+	    public static string AsString(this DateTime date) => $"{date:HH:mm:ss}";
+    }
+}
+
+namespace CurrenciesRatesParser
+{   
     class Program
     {
         static void Main(string[] args)
         {
-           Console.WriteLine("Service start. Time: {0}", DateTime.Now.ToString("HH:mm:ss"));
+           Console.WriteLine($"Service start. Time: {DateTime.Now.AsString()}");
 
             #region Exchange
             //EXCHANGE JOB
