@@ -28,5 +28,6 @@ namespace CurrenciesRatesParser.Helpers
         public static string CoinsTsbnkSPMD = "https://coins.tsbnk.ru/katalog/rossiyskie/investitsionnaya-rossiyskaya-moneta-georgiy-pobedonosets-spmd-50-rub-2018-2019-gg-zoloto-7-78-gr-spm/";
         public static string CoinsTsbnkMMD = "https://coins.tsbnk.ru/katalog/rossiyskie/investitsionnaya-rossiyskaya-moneta-2018-georgiy-pobedonosets-mmd-50-rub-2018-g-v-zoloto-7-78-gr-mmd/";
         public static string ZolotoyDvor = "https://www.zolotoydvor.ru/Zolotye-monety-Rossii_100g.html";
+        public static string MKB = "https://mkb.ru/coins";
     }
 }

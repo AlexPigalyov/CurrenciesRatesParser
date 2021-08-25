@@ -1,14 +1,24 @@
 ﻿using CurrenciesRatesParser.Helpers;
 using CurrenciesRatesParser.Mappers;
 using CurrenciesRatesParser.Model;
+
 using HtmlAgilityPack;
+
+using mshtml;
+
 using Newtonsoft.Json.Linq;
+
+using OpenQA.Selenium;
+using OpenQA.Selenium.Chrome;
+
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace ratesRatesParser.Services
@@ -309,18 +319,27 @@ namespace ratesRatesParser.Services
 
                 var doc = await web.LoadFromWebAsync(UrlParseHelper.ZolotoMD);
 
-                List<double> sellPrices = doc.DocumentNode
-                    .SelectNodes("//span[@class='js-price-club']").ToList()
-                    .Take(3)
-                    .Select(x =>
-                        x.InnerText.Replace("Руб.", "").ParseToDoubleFormat())
+                var h = doc.DocumentNode
+                    .SelectNodes("//div[@class='js-product']").ToList();
+
+                var g = doc.DocumentNode
+                    .SelectNodes("//div[@class='js-product']").ToList()
+                    .Where(x => x.InnerHtml.Contains("Георгий ПОБЕДОНОСЕЦ ММД 2018 - 2021")).FirstOrDefault();
+
+                List<double> mmd = doc.DocumentNode
+                    .SelectNodes("//div[@class='js-product']").ToList()
+                    .Where(x => x.InnerHtml.Contains("Георгий ПОБЕДОНОСЕЦ ММД 2018 - 2021")).FirstOrDefault()
+                    .ChildNodes.Select(x => x.SelectSingleNode("//div['hover-price']")).FirstOrDefault()
+                    .ChildNodes.Where(x => x.GetClasses().Contains("product_price") && x.GetClasses().Contains("product_price__buyout"))
+                    .Select(x => double.Parse(x.ChildNodes.LastOrDefault().ChildNodes.FirstOrDefault().InnerText))
                     .ToList();
 
-                List<double> buyPrices = doc.DocumentNode
-                    .SelectNodes("//span[@class='js-price-buyout']").ToList()
-                    .Take(3)
-                    .Select(x =>
-                        x.InnerText.Replace("Руб.", "").ParseToDoubleFormat())
+                List<double> spmd = doc.DocumentNode
+                    .SelectNodes("//div[@class='js-product']").ToList()
+                    .Where(x => x.InnerHtml.Contains("Георгий ПОБЕДОНОСЕЦ СПМД 2018 -2021")).FirstOrDefault()
+                    .ChildNodes.Select(x => x.SelectSingleNode("//div['hover-price']")).FirstOrDefault()
+                    .ChildNodes.Where(x => x.GetClasses().Contains("product_price") && x.GetClasses().Contains("product_price__buyout"))
+                    .Select(x => double.Parse(x.ChildNodes.LastOrDefault().ChildNodes.FirstOrDefault().InnerText))
                     .ToList();
 
                 DateTime parseDate = DateTime.Now;
@@ -331,16 +350,16 @@ namespace ratesRatesParser.Services
                     new CoinsRate()
                     {
                         Acronim = "GPM",
-                        Sell = sellPrices[2],
-                        Buy = buyPrices[2],
+                        Sell = mmd[0],
+                        Buy = mmd[1],
                         Date = parseDate,
                         Site = UrlParseHelper.ZolotoMD
                     },
                     new CoinsRate()
                     {
                         Acronim = "GPS",
-                        Sell = sellPrices[0],
-                        Buy = buyPrices[2],
+                        Sell = spmd[0],
+                        Buy = spmd[1],
                         Date = parseDate,
                         Site = UrlParseHelper.ZolotoMD
                     }
@@ -720,6 +739,48 @@ namespace ratesRatesParser.Services
             return coin;
         }
 
+        public static CoinsRate GetCoinsRatesMkb1()
+        {
+            var options = new ChromeOptions();
+            options.BinaryLocation = @"C:\Program Files\Google\Chrome\Application\chrome.exe";
+
+            IWebDriver driver = new ChromeDriver(
+                Path.Combine(
+                    Directory.GetCurrentDirectory(), "SeleniumChromeWebDriver"),
+                options);
+
+            driver.Navigate().GoToUrl(UrlParseHelper.MKB);
+
+            driver.Manage().Timeouts().PageLoad = TimeSpan.FromSeconds(5);
+
+            Task.Delay(5000).Wait();
+
+            string innerHtml = driver.PageSource;
+
+            HtmlDocument doc = new HtmlDocument();
+
+            doc.LoadHtml(innerHtml);
+
+            var coinsPrice = doc.DocumentNode.SelectNodes("//div[@class='cols cols3']")
+                .FirstOrDefault().ChildNodes
+                .Where(x => x.InnerText.Contains("Георгий Победоносец"))
+                .Where(x => x.Name != "#text")
+                .FirstOrDefault()
+                .LastChild.InnerHtml.Split()[0];
+
+            driver.Close();
+
+            return new CoinsRate()
+            {
+                Date = DateTime.Now,
+                Site = UrlParseHelper.MKB,
+                Acronim = "GPM",
+                Buy = double.Parse(coinsPrice),
+                Sell = double.Parse(coinsPrice)
+            };
+
+        }
+
         public static async Task<List<CoinsRate>> GetCoinsRatesLantaRu()
         {
             try
@@ -774,6 +835,8 @@ namespace ratesRatesParser.Services
                 return null;
             }
         }
+
+
 
         private static List<double> GetCoinPricesLantaRu(HtmlNode coinHtml)
         {

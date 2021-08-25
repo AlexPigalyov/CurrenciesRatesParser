@@ -1,6 +1,9 @@
 ﻿using CurrenciesRatesParser.Jobs;
 using Quartz;
 using Quartz.Impl;
+
+using ratesRatesParser.Services;
+
 using System;
 using System.Configuration;
 
@@ -10,7 +13,9 @@ namespace CurrenciesRatesParser
     {
         static void Main(string[] args)
         {
-           Console.WriteLine("Service start. Time: {0}", DateTime.Now.ToString("HH:mm:ss"));
+            //ParserService.GetCoinsRatesMkb1();
+
+            Console.WriteLine("Service start. Time: {0}", DateTime.Now.ToString("HH:mm:ss"));
 
             #region Exchange
             //EXCHANGE JOB
